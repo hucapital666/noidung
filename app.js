@@ -4,38 +4,10 @@
    ============================================================ */
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-let currentMode  = 'business';
-let lang         = 'vi';
-let openCS       = null;
-let aspectRatio  = '9:16';   // mặc định dọc
-let renderQuality = '4K';    // mặc định 4K
-let promptQty    = 6;        // mặc định 6 prompt
+let currentMode = 'business';
+let lang        = 'vi';
+let openCS      = null;
 const $ = id => document.getElementById(id);
-
-// ── ASPECT RATIO & QUALITY SELECTORS ─────────────────────────────────────────
-function selectAR(el, val) {
-  aspectRatio = val;
-  ['ar-9-16','ar-16-9','ar-1-1','ar-4-5'].forEach(id => {
-    const e = $(id);
-    if (e) e.classList.remove('sel-g');
-  });
-  el.classList.add('sel-g');
-}
-
-function selectQ(el, val) {
-  renderQuality = val;
-  ['q-hd','q-4k','q-8k'].forEach(id => {
-    const e = $(id);
-    if (e) e.classList.remove('sel-g');
-  });
-  el.classList.add('sel-g');
-}
-
-function changeQty(delta) {
-  promptQty = Math.min(12, Math.max(1, promptQty + delta));
-  const d = $('qty-display');
-  if (d) d.textContent = promptQty;
-}
 
 // ── TAB NAV ───────────────────────────────────────────────────────────────────
 function goTab(n) {
