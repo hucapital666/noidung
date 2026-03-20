@@ -152,55 +152,9 @@
 
     <!-- PANE 6 — Đầu ra -->
     <div class="tab-pane" id="pane-6">
-      <div class="panel-header">
-        <div class="panel-step-num">Bước 6/10</div>
-        <div class="panel-title">Định dạng đầu ra</div>
-        <div class="panel-desc">Tuỳ chọn áp dụng cho Prompt ảnh & video AI</div>
-      </div>
+      <div class="panel-header"><div class="panel-step-num">Bước 6/10</div><div class="panel-title">Định dạng đầu ra</div></div>
       <div class="panel-body">
-
-        <!-- Loại đầu ra -->
-        <div>
-          <div class="field-label">Loại đầu ra (nhiều)</div>
-          <div class="multi-badges" id="badges-output"></div>
-        </div>
-
-        <!-- Khung hình -->
-        <div>
-          <div class="field-label">🖼 Khung hình</div>
-          <div class="multi-badges">
-            <span class="mbadge sel-g" id="ar-9-16" onclick="selectAR(this,'9:16')">9:16 <span style="opacity:.55;font-size:10px">Dọc</span></span>
-            <span class="mbadge"       id="ar-16-9" onclick="selectAR(this,'16:9')">16:9 <span style="opacity:.55;font-size:10px">Ngang</span></span>
-            <span class="mbadge"       id="ar-1-1"  onclick="selectAR(this,'1:1')">1:1 <span style="opacity:.55;font-size:10px">Vuông</span></span>
-            <span class="mbadge"       id="ar-4-5"  onclick="selectAR(this,'4:5')">4:5 <span style="opacity:.55;font-size:10px">Feed</span></span>
-          </div>
-        </div>
-
-        <!-- Chất lượng -->
-        <div>
-          <div class="field-label">✨ Chất lượng render</div>
-          <div class="multi-badges">
-            <span class="mbadge"       id="q-hd"  onclick="selectQ(this,'HD')">HD</span>
-            <span class="mbadge sel-g" id="q-4k"  onclick="selectQ(this,'4K')">4K</span>
-            <span class="mbadge"       id="q-8k"  onclick="selectQ(this,'8K')">8K</span>
-          </div>
-        </div>
-
-        <!-- Số lượng prompt -->
-        <div>
-          <div class="field-label" style="margin-bottom:10px">🔢 Số prompt ảnh / video xuất ra</div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <button onclick="changeQty(-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--text);font-size:16px;cursor:pointer;font-family:Lexend,sans-serif;line-height:1;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)'">−</button>
-            <div style="display:flex;align-items:baseline;gap:4px">
-              <span id="qty-display" style="font-size:22px;font-weight:800;color:var(--deep-gold);font-family:Lexend,sans-serif;line-height:1">6</span>
-              <span style="font-size:11px;color:var(--muted)">prompt</span>
-            </div>
-            <button onclick="changeQty(+1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--text);font-size:16px;cursor:pointer;font-family:Lexend,sans-serif;line-height:1;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)'">＋</button>
-            <span style="font-size:11px;color:var(--muted)">(1–12)</span>
-          </div>
-          <div style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.5">Mỗi prompt sẽ mô tả 1 cảnh/hình bám sát nội dung kịch bản đã điền.</div>
-        </div>
-
+        <div><div class="field-label">Chọn đầu ra (nhiều)</div><div class="multi-badges" id="badges-output"></div></div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(5)">← Lại</button><button class="nav-btn primary" onclick="goTab(7)">Tiếp →</button></div>
     </div>
