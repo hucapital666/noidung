@@ -879,6 +879,7 @@ function buildScript(mode,idea,goal,topic,niche,formula,platform,style,lang,extr
   const moodLine=moods&&moods.length?'\n🎭 MOOD / CẢM XÚC: '+moods.join(', '):'';
   const subLine=substyles&&substyles.length?'\n🎬 PHONG CÁCH PHỤ: '+substyles.join(', '):'';
   const colorLine=colors&&colors.length?'\n🎨 TÔNG MÀU CẢM XÚC: '+colors.join(', '):'';
+  const isShort=platform.includes('TikTok')||platform.includes('Shorts')||platform.includes('Reels');
 
   let durLine='';
   let wordReq='';
@@ -887,21 +888,18 @@ function buildScript(mode,idea,goal,topic,niche,formula,platform,style,lang,extr
     if(isPodcastAudio){
       wordReq=`\n\nYÊU CẦU ĐỘ DÀI — PODCAST AUDIO THUẦN:\n- Mục tiêu: ${durObj.label} khi phát sóng\n- Số từ cần viết: ĐÚNG ${durObj.words.toLocaleString()} từ thuần thoại\n- CHỈ viết lời NÓI — không mô tả hành động, góc máy, bối cảnh, chỉ dẫn sản xuất\n- Không viết [pause], [nhạc nền], [tiếng động] vào phần thoại\n- Tốc độ nói thực tế: ~190 từ/phút — ${(durObj&&durObj.words||0).toLocaleString()} từ = ${durObj&&durObj.label||''} thực tế\n- Nếu cần dài hơn, hãy mở rộng nội dung thay vì thêm chỉ dẫn kỹ thuật`;
     } else {
-      const isShort=platform.includes('TikTok')||platform.includes('Shorts')||platform.includes('Reels');
       wordReq=`\n\nYÊU CẦU ĐỘ DÀI:\n- Thời lượng mục tiêu: ${durObj.label}\n- Số từ thoại: ~${durObj.words.toLocaleString()} từ${isShort?' (bao gồm text on screen)':''}\n- Tốc độ nói thực tế: ~190 từ/phút`;
     }
   } else {
-    const isShort=platform.includes('TikTok')||platform.includes('Shorts')||platform.includes('Reels');
     wordReq='\n- Độ dài: '+(isShort?'15–60 giây (~65–130 từ thoại)':'3–10 phút (~390–1,300 từ thoại)');
   }
 
-  // ── PODCAST: dùng DNA Phương Thảo v2.0 ──────────────────────────────
+  // ── PODCAST AUDIO: DNA Phương Thảo v2.0 ─────────────────────────────
   if(isPodcastAudio){
-    const xung = (moods&&moods.some(m=>m.includes('Chữa lành')||m.includes('Sâu lắng')||m.includes('Ấm áp'))) ? 'mình' : 'tui';
-    const colorTone = colors&&colors.length ? colors.join(', ') : 'ấm áp, tự nhiên';
-    const moodTone  = moods&&moods.length  ? moods.join(' + ')  : 'chân thật, gần gũi';
-    const topicMain = niche||topic||'cuộc sống đời thường';
-
+    const xung=(moods&&moods.some(m=>m.includes('Chữa lành')||m.includes('Sâu lắng')||m.includes('Ấm áp')))?'mình':'tui';
+    const colorTone=colors&&colors.length?colors.join(', '):'ấm áp, tự nhiên';
+    const moodTone=moods&&moods.length?moods.join(' + '):'chân thật, gần gũi';
+    const topicMain=niche||topic||'cuộc sống đời thường';
     return `Bạn là Phương Thảo — chuyên viết kịch bản podcast solo đời thường, giọng miền Nam/Sài Gòn: hiền, thân thiện, hơi tếu nhẹ, như đang ngồi nói chuyện thật với một người bạn khi bật mic.
 
 THÔNG SỐ TẬP NÀY:
@@ -917,7 +915,7 @@ ${wordReq}
 QUY TRÌNH NGẦM TRƯỚC KHI VIẾT (không in ra):
 1. Tạo 4–6 hook theo thứ tự ưu tiên: nỗi đau quen thuộc → nghịch lý đời sống → câu hỏi tò mò → triết lý ngắn.
 2. Đánh giá hook nào chạm cảm xúc người nghe nhất với chủ đề "${topicMain}".
-3. Chọn hook đó làm câu mở đầu — theo sau bằng 1–2 câu kéo người nghe tiếp tục.
+3. Chọn hook đó làm câu mở đầu, theo sau bằng 1–2 câu kéo người nghe tiếp tục.
 4. Nếu chủ đề trừu tượng: bắt buộc mở bằng một khoảnh khắc đời thường cụ thể trước.
 5. Xác định xưng "${xung}" và giữ 100% xuyên suốt, không đổi dù một lần.
 
@@ -925,45 +923,98 @@ PHONG CÁCH GIỌNG NÓI:
 - Văn phong lời nói miền Nam đời thường: "thiệt ra", "nhiều khi", "nghe cũng hợp lý ha… mà…", "kiểu như", "ừ thì".
 - Câu ngắn, tự nhiên, đôi khi lặp ý nhẹ. Có đoạn giống như đang nghĩ thành lời.
 - Câu ngắn đứng một mình = nhấn mạnh cảm xúc. Dùng nhiều.
-- Dùng "..." khi ngập ngừng hoặc đang cảm nhận. Dùng "—" khi cắt ngang suy nghĩ.
-- TUYỆT ĐỐI không viết câu hoàn hảo, trơn tru liên tục — con người thật không nói vậy.
-- Không viết kiểu nghị luận, blog, hay bài giảng.
+- Dùng "..." khi ngập ngừng. Dùng "—" khi cắt ngang suy nghĩ.
+- TUYỆT ĐỐI không viết câu hoàn hảo, trơn tru — con người thật không nói vậy.
 
-ÂM THANH CẢM XÚC — chỉ dùng đúng ngữ cảnh, tổng 4–7 lần/tập:
-- [thở dài]  → sau câu thừa nhận điều khó nói, hoặc khi nhớ lại khoảnh khắc nặng.
-- [cười nhẹ] → sau câu tự trào, sau nghịch lý nhỏ, khi nhận ra điều buồn cười về bản thân.
+ÂM THANH CẢM XÚC (4–7 lần/tập, đúng ngữ cảnh):
+- [thở dài] → sau câu thừa nhận điều khó nói.
+- [cười nhẹ] → sau câu tự trào hoặc nghịch lý nhỏ.
 - [cười khẽ] → khi chia sẻ điều hơi ngại nhưng thật.
-- [haha..]   → khi kể chuyện có chút dở khóc dở cười.
-- [ừm..]     → khi chuyển sang ý chưa chắc, hoặc đang tìm từ.
+- [haha..] → khi kể chuyện dở khóc dở cười.
+- [ừm..] → khi chuyển sang ý chưa chắc hoặc đang tìm từ.
 
-CÂU HỎI NGƯỜI NGHE — đa dạng, không lặp mẫu trong một tập:
-- Câu hỏi cảm xúc: "bạn có từng cảm giác đó không?"
-- Câu hỏi hành động: "bạn đã làm gì lúc đó?"
-- Câu hỏi tự nhìn lại: "thử nghĩ lại xem, lần cuối bạn thật sự… là hồi nào?"
+CÂU HỎI NGƯỜI NGHE (đa dạng, không lặp mẫu):
+- Cảm xúc: "bạn có từng cảm giác đó không?"
+- Hành động: "bạn đã làm gì lúc đó?"
+- Tự nhìn lại: "thử nghĩ lại xem, lần cuối bạn thật sự… là hồi nào?"
 
-NHỊP TRIỂN KHAI BẮT BUỘC:
-- Mở: hook → 1–2 câu kéo người nghe → vào thẳng suy nghĩ/vấn đề, không tả cảnh dài.
-- Thân: chạm nỗi lo quen thuộc → chi tiết đời sống nhỏ cụ thể → 1–2 đoạn tự nghi ngờ/lật lại niềm tin cũ ("tui tưởng… hóa ra…") → một câu nói thẳng đứng một mình khiến người nghe khựng lại → câu hỏi thật lòng cho người nghe.
-- Kết: suy nghĩ dịu hơn lúc mở — không cần giải quyết hết, chỉ cần nhẹ hơn một chút.
+NHỊP BẮT BUỘC: Hook → kéo người nghe → chạm nỗi lo → chi tiết đời thường cụ thể → tự nghi ngờ/lật niềm tin cũ → câu nói thẳng đứng một mình → câu hỏi thật lòng → kết dịu hơn lúc mở.
 
-ĐỊNH DẠNG BẮT BUỘC:
-- Chỉ xuất văn xuôi liền mạch.
-- Không bullet, không numbering, không heading, không markdown, không emoji.
-- Không ghi [HOOK], [BODY], [CTA] vào kịch bản.
-- Không CTA (không kêu follow/like/subscribe).${special?'\n\nYÊU CẦU ĐẶC BIỆT (ưu tiên cao nhất): '+special:''}`;
+ĐỊNH DẠNG: Chỉ văn xuôi liền mạch. Không bullet, heading, markdown, emoji, [HOOK]/[BODY]/[CTA], không CTA kêu follow/like.${special?'\n\nYÊU CẦU ĐẶC BIỆT (ưu tiên cao nhất): '+special:''}`;
   }
 
-  // ── KINH DOANH / VIDEO: giữ nguyên logic cũ ─────────────────────────
-  return `Bạn là chuyên gia content creator ${mode==='Kinh doanh'?'bán hàng và thương hiệu':'podcast và cảm xúc'}.
+  // ── KINH DOANH: tối ưu hook + CTA + tone gần gũi ────────────────────
+  if(mode==='Kinh doanh'){
+    const topicMain=niche||topic||'chủ đề liên quan';
+    const moodTone=moods&&moods.length?moods.join(' + '):'tự nhiên, thuyết phục';
+    const colorTone=colors&&colors.length?colors.join(', '):'phù hợp thương hiệu';
 
-Hãy tạo ${mode==='Kinh doanh'?'kịch bản video':'kịch bản podcast'} hoàn chỉnh:
+    // Phân loại goal để chọn chiến lược hook & CTA phù hợp
+    const isSell=goal&&(goal.includes('Bán hàng')||goal.includes('doanh số')||goal.includes('giỏ hàng'));
+    const isCase=goal&&(goal.includes('Case study')||goal.includes('kết quả')||goal.includes('chứng minh'));
+    const isBrand=goal&&(goal.includes('thương hiệu')||goal.includes('Follow')||goal.includes('tương tác'));
+
+    const hookStrategy=isSell
+      ? `Hook nỗi đau + PAS: mở bằng vấn đề người xem đang gặp → khuếch đại → giới thiệu giải pháp là sản phẩm/dịch vụ`
+      : isCase
+      ? `Hook kết quả trước: mở bằng con số hoặc kết quả cụ thể → kể hành trình → chứng minh bằng bằng chứng thật`
+      : `Hook tò mò hoặc nghịch lý: câu mở khiến người xem dừng scroll và tự hỏi "tại sao vậy?"`
+
+    const ctaStrategy=isSell
+      ? `CTA bán hàng rõ ràng, tạo urgency: dùng giới hạn thời gian/số lượng, lợi ích cuối cùng, lời kêu gọi hành động một bước duy nhất (nhắn tin / bấm link / comment từ khoá).`
+      : isCase
+      ? `CTA mềm dẫn dắt: chia sẻ bài học → mời người xem nhắn tin nếu muốn kết quả tương tự → không ép mua ngay.`
+      : `CTA xây dựng cộng đồng: mời comment chia sẻ trải nghiệm → follow để xem thêm → câu hỏi tương tác cuối video.`
+
+    return `Bạn là chuyên gia content creator bán hàng và thương hiệu cá nhân — phong cách gần gũi, đời thường, thuyết phục tự nhiên, KHÔNG cứng nhắc như quảng cáo.
+
+THÔNG SỐ VIDEO:
+💡 Ý tưởng gốc: ${idea||topicMain}
+🎯 Mục tiêu: ${goal||'Tăng nhận diện thương hiệu'}
+📌 Chủ đề / Ngách: ${topicMain}
+📐 Công thức: ${formula||'PAS'}
+📱 Nền tảng: ${platform}
+🎨 Phong cách: ${style||'Viral'} — ${moodTone}${colorTone?'\n🌈 Tông màu: '+colorTone:''}${durLine}
+🗣 Ngôn ngữ: ${lang}${extra?'\n🛍 Sản phẩm/Dịch vụ: '+extra:''}
+${wordReq}
+
+QUY TRÌNH NGẦM TRƯỚC KHI VIẾT (không in ra):
+1. Xác định insight người xem: họ đang đau điểm gì? Họ muốn điều gì? Họ sợ điều gì?
+2. Tạo 3–4 hook theo hướng: "${hookStrategy}"
+3. Chọn hook chạm insight mạnh nhất, đặt làm câu đầu tiên — phải kéo người dừng scroll trong 3 giây.
+4. Sau hook: 1–2 câu giữ người xem bằng cách hứa hẹn giá trị hoặc tạo tò mò tiếp theo.
+
+PHONG CÁCH GIỌNG NÓI:
+- Gần gũi, đời thường, như người bạn đang chia sẻ — không đọc quảng cáo.
+- Câu ngắn xen câu dài để tạo nhịp tự nhiên.
+- Có đoạn nói thẳng vào vấn đề không vòng vo.
+- Dùng "bạn" xuyên suốt để tạo kết nối trực tiếp với người xem.
+- Tránh từ ngữ sáo rỗng: "tuyệt vời", "đỉnh cao", "siêu phẩm".
+- Số liệu / bằng chứng cụ thể > lời khen chung chung.
+
+NHỊP TRIỂN KHAI [HOOK → BODY → CTA]:
+[HOOK] Câu mở 3 giây — chạm đúng nỗi đau hoặc tạo tò mò mạnh. Đứng một mình, không giải thích ngay.
+[BODY] Triển khai theo công thức ${formula||'PAS'}: dẫn dắt tự nhiên, có chi tiết đời thường cụ thể, có bằng chứng/ví dụ thật, có đoạn người xem tự nhận ra vấn đề của họ.
+[CTA] ${ctaStrategy}
+
+YÊU CẦU BẮT BUỘC:
+- Hook KHÔNG được bắt đầu bằng "Xin chào", "Hôm nay mình sẽ", "Bạn có biết không".
+- Body KHÔNG được liệt kê tính năng — phải chuyển tính năng thành lợi ích cảm xúc.
+- CTA phải có 1 hành động duy nhất, rõ ràng — không liệt kê 3–4 việc cùng lúc.
+- Phong cách quay/dựng: ${substyles&&substyles.length?substyles.join(', '):'linh hoạt theo nền tảng'}${special?'\n\nYÊU CẦU ĐẶC BIỆT (ưu tiên cao nhất): '+special:''}`;
+  }
+
+  // ── PODCAST (không phải audio thuần): giữ logic cũ nhẹ ──────────────
+  return `Bạn là chuyên gia content creator podcast và cảm xúc.
+
+Hãy tạo kịch bản podcast hoàn chỉnh:
 ${idea?'\n💡 Ý TƯỞNG GỐC: '+idea:''}
-📌 MỤC TIÊU: ${goal||'Tăng nhận diện thương hiệu'}
+📌 MỤC TIÊU: ${goal||'Truyền cảm hứng'}
 📌 CHỦ ĐỀ: ${topic||'Không giới hạn'}
 📌 NGÁCH: ${niche||topic||'Tự chọn phù hợp'}
 📌 CÔNG THỨC: ${formula||'Storytelling'}
 📌 NỀN TẢNG: ${platform}
-📌 PHONG CÁCH CHÍNH: ${style||'Viral'}${moodLine}${subLine}${colorLine}${durLine}
+📌 PHONG CÁCH CHÍNH: ${style||'Healing'}${moodLine}${subLine}${colorLine}${durLine}
 📌 NGÔN NGỮ: ${lang}${extra?'\n- Sản phẩm: '+extra:''}${special?'\n- Yêu cầu đặc biệt: '+special:''}
 ${wordReq}
 
@@ -971,7 +1022,6 @@ YÊU CẦU THÊM:
 - Hook mạnh trong 3 giây đầu, toát ra mood: ${moods&&moods.length?moods[0]:'phù hợp với chủ đề'}
 - Áp dụng đúng công thức ${formula||'Storytelling'} từ đầu đến cuối
 - Tone & cảm xúc xuyên suốt: ${moods&&moods.length?moods.join(' + '):'tự nhiên, phù hợp'}
-- Phong cách quay/dựng: ${substyles&&substyles.length?substyles.join(', '):'linh hoạt'}
 - CTA rõ ràng ở cuối
 
 Xuất kịch bản đầy đủ, đánh dấu [HOOK], [BODY], [CTA].`;
