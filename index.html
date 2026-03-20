@@ -5,442 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MUZI STUDIO</title>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{
---bg:#EDEAE0;
---bg2:#F8F6EE;
---bg3:#E4E0D4;
---bg4:#FFFFFF;
---border:rgba(160,148,100,0.20);
---border2:rgba(160,148,100,0.36);
---accent:#B8860B;
---accent2:#9A6800;
---accent3:#8A7A60;
---text:#28220E;
---muted:rgba(40,34,14,0.44);
---muted2:rgba(40,34,14,0.68);
---gold-grad:linear-gradient(135deg,#E8B820 0%,#C8900A 55%,#A87000 100%);
---silver-grad:linear-gradient(135deg,#FAFAF8 0%,#E8E4D8 100%);
---metallic-bg:linear-gradient(160deg,#F5F3EB 0%,#EAE6DA 45%,#F2F0E8 100%);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--metallic-bg);background-attachment:fixed;color:var(--text);font-family:'Lexend',sans-serif;min-height:100vh}
-/* AUTH SCREEN */
-.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--metallic-bg);background-attachment:fixed}
-.auth-card{background:linear-gradient(160deg,#FFFFFF 0%,#F8F6EE 100%);border:1px solid var(--border2);border-radius:16px;padding:40px;width:100%;max-width:400px;box-shadow:0 4px 32px rgba(160,140,60,0.12),0 1px 4px rgba(160,140,60,0.08)}
-.auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
-.auth-logo svg{flex-shrink:0}
-.auth-logo-name{font-size:22px;font-weight:800;background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;line-height:1}
-.auth-logo-sub{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
-.auth-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px}
-.auth-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5}
-.auth-field{margin-bottom:14px}
-.auth-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:block}
-.auth-input{width:100%;padding:11px 14px;background:#FFFFFF;border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Lexend',sans-serif;font-size:13px;outline:none;transition:border-color .2s;box-shadow:inset 0 1px 3px rgba(160,140,60,0.06)}
-.auth-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,134,11,0.12)}
-.auth-input::placeholder{color:var(--muted)}
-.auth-btn{width:100%;padding:12px;background:var(--gold-grad);color:#FFFFFF;border:none;border-radius:9px;font-family:'Lexend',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s,box-shadow .2s;margin-top:8px;box-shadow:0 2px 12px rgba(184,134,11,0.28),0 1px 3px rgba(184,134,11,0.18)}
-.auth-btn:hover{opacity:.92;box-shadow:0 4px 18px rgba(184,134,11,0.38)}
-.auth-btn:disabled{opacity:.5;cursor:not-allowed}
-.auth-toggle{text-align:center;margin-top:16px;font-size:13px;color:var(--muted)}
-.auth-toggle a{color:var(--accent);cursor:pointer;text-decoration:none;font-weight:500}
-.auth-error{background:rgba(154,104,0,.07);border:1px solid rgba(154,104,0,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent2);margin-bottom:14px;display:none}
-.auth-msg{background:rgba(138,122,96,.08);border:1px solid rgba(138,122,96,.28);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent3);margin-bottom:14px;display:none}
-/* APP LAYOUT */
-.app{display:none;grid-template-columns:64px 300px 1fr;min-height:100vh;position:relative;z-index:1}
-.app.show{display:grid}
-/* TOP BAR */
-.top-bar{grid-column:1/-1;background:linear-gradient(90deg,#FFFFFF 0%,#F8F6EE 100%);border-bottom:1px solid var(--border2);padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(160,140,60,0.10)}
-.top-bar-left{display:flex;align-items:center;gap:12px}
-.top-bar-logo{font-size:14px;font-weight:800;background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px}
-.top-bar-badge{font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid rgba(138,122,96,.35);color:var(--accent3);background:rgba(138,122,96,.08);letter-spacing:.5px}
-.top-bar-right{display:flex;align-items:center;gap:10px}
-.user-pill{display:flex;align-items:center;gap:7px;padding:5px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:999px}
-.user-avatar{width:22px;height:22px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#FFFFFF}
-.user-email{font-size:11px;color:var(--muted2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.logout-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:'Lexend',sans-serif;cursor:pointer;transition:all .18s}
-.logout-btn:hover{border-color:var(--accent2);color:var(--accent2)}
-/* TAB RAIL */
-.tab-rail{background:var(--silver-grad);border-right:1px solid var(--border2);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:3px;position:sticky;top:48px;height:calc(100vh - 48px);overflow-y:auto;box-shadow:inset -1px 0 0 rgba(160,140,60,0.08)}
-.rail-divider{width:32px;height:1px;background:var(--border2);margin:6px 0}
-.tab-btn{width:44px;height:44px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:all .18s;position:relative;font-family:'Lexend',sans-serif}
-.tab-btn:hover{background:rgba(184,134,11,.09);color:var(--text);border-color:var(--border2)}
-.tab-btn.active{background:linear-gradient(135deg,rgba(232,184,32,.18) 0%,rgba(184,134,11,.12) 100%);color:var(--accent);border-color:rgba(184,134,11,.4);box-shadow:0 1px 6px rgba(184,134,11,.12)}
-.tab-btn .tab-num{font-size:9px;font-weight:700;line-height:1;color:inherit}
-.tab-btn .tab-ico{font-size:13px;line-height:1}
-.tab-btn.active::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:3px;height:22px;background:var(--gold-grad);border-radius:2px 0 0 2px}
-.rail-bottom{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:8px}
-.lang-mini{width:36px;height:22px;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;font-family:'Lexend',sans-serif;cursor:pointer;transition:all .15s;font-weight:600}
-.lang-mini.active{border-color:var(--accent);color:var(--accent);background:rgba(184,134,11,.09)}
-/* STEP PANEL */
-.step-panel{background:linear-gradient(180deg,#FAFAF8 0%,#F4F2EA 100%);border-right:1px solid var(--border2);display:flex;flex-direction:column;position:sticky;top:48px;height:calc(100vh - 48px);overflow:hidden;box-shadow:2px 0 12px rgba(160,140,60,0.06)}
-.tab-pane{display:none;flex-direction:column;height:100%;overflow:hidden}
-.tab-pane.active{display:flex}
-.progress-bar{height:3px;background:var(--border);flex-shrink:0}
-.progress-fill{height:100%;background:var(--gold-grad);border-radius:1px;transition:width .3s;box-shadow:0 0 6px rgba(200,150,10,0.35)}
-.panel-header{padding:18px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;background:rgba(255,255,255,0.6)}
-.panel-step-num{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
-.panel-title{font-size:16px;font-weight:700;color:var(--text);line-height:1.2}
-.panel-desc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-.panel-body{padding:14px 20px;flex:1;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
-.panel-body::-webkit-scrollbar{width:3px}
-.panel-body::-webkit-scrollbar-thumb{background:var(--border2)}
-.mode-toggle{display:flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(160,140,60,0.06)}
-.mode-btn{flex:1;padding:9px 8px;background:transparent;border:none;color:var(--muted);font-family:'Lexend',sans-serif;font-size:12px;cursor:pointer;transition:all .18s;font-weight:500}
-.mode-btn.active{background:var(--gold-grad);color:#FFFFFF;font-weight:700;box-shadow:0 1px 6px rgba(184,134,11,0.22)}
-.field-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:7px}
-.custom-select{position:relative;z-index:10}
-.cs-trigger{width:100%;padding:10px 34px 10px 12px;background:#FFFFFF;border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Lexend',sans-serif;font-size:13px;cursor:pointer;text-align:left;transition:border-color .18s,box-shadow .18s;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 1px 3px rgba(160,140,60,0.07)}
-.cs-trigger:hover{border-color:rgba(184,134,11,.4)}
-.cs-trigger.open{border-color:var(--accent);border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:0 0 0 3px rgba(184,134,11,0.10)}
-.cs-arrow{font-size:9px;color:var(--muted);transition:transform .2s;flex-shrink:0;pointer-events:none}
-.cs-trigger.open .cs-arrow{transform:rotate(180deg);color:var(--accent)}
-.cs-val{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
-.cs-val.placeholder{color:var(--muted)}
-.cs-dropdown{position:absolute;top:100%;left:0;right:0;background:#FFFFFF;border:1px solid rgba(184,134,11,.3);border-top:none;border-radius:0 0 8px 8px;z-index:200;max-height:200px;overflow-y:auto;display:none;box-shadow:0 8px 24px rgba(160,140,60,0.14)}
-.cs-dropdown.open{display:block}
-.cs-dropdown::-webkit-scrollbar{width:3px}
-.cs-dropdown::-webkit-scrollbar-thumb{background:var(--border2)}
-.cs-option{padding:9px 12px;font-size:12.5px;color:var(--muted2);cursor:pointer;transition:all .12s;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.cs-option:last-child{border-bottom:none}
-.cs-option:hover{background:rgba(184,134,11,.06);color:var(--text)}
-.cs-option.selected{color:var(--accent);background:rgba(184,134,11,.09)}
-.cs-option::before{content:'';width:14px;flex-shrink:0;font-size:11px;color:var(--accent);font-weight:700}
-.cs-option.selected::before{content:'✓'}
-.multi-badges{display:flex;flex-wrap:wrap;gap:5px}
-.mbadge{padding:5px 11px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--border2);color:var(--muted);background:transparent;font-family:'Lexend',sans-serif}
-.mbadge:hover{border-color:rgba(184,134,11,.4);color:var(--text)}
-.mbadge.sel-y{border-color:var(--accent);color:var(--accent);background:rgba(184,134,11,.09);box-shadow:0 0 0 2px rgba(184,134,11,.10)}
-.mbadge.sel-g{border-color:var(--accent3);color:var(--accent3);background:rgba(138,122,96,.09)}
-.mbadge.sel-r{border-color:var(--accent2);color:var(--accent2);background:rgba(154,104,0,.08)}
-textarea{width:100%;padding:10px 12px;background:#FFFFFF;border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Lexend',sans-serif;font-size:13px;outline:none;resize:vertical;line-height:1.6;transition:border-color .2s,box-shadow .2s;box-shadow:inset 0 1px 3px rgba(160,140,60,0.06)}
-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,134,11,0.10)}
-textarea::placeholder{color:var(--muted)}
-.niche-gen-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
-.niche-gen-btn{padding:4px 11px;border-radius:999px;border:1px solid var(--accent);background:rgba(184,134,11,.07);color:var(--accent);font-size:11px;font-weight:600;font-family:'Lexend',sans-serif;cursor:pointer;transition:all .18s}
-.niche-gen-btn:hover{background:rgba(184,134,11,.16)}
-.niche-result-label{font-size:11px;color:var(--muted);margin-bottom:5px}
-.niche-prompt-box{display:none}
-.niche-prompt-header{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.2);border-radius:8px 8px 0 0;border-bottom:none}
-.niche-prompt-title{font-size:11px;color:var(--accent);font-weight:500}
-.panel-nav{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:rgba(255,255,255,0.5)}
-.nav-btn{flex:1;padding:10px;border-radius:8px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:'Lexend',sans-serif;font-size:12px;cursor:pointer;transition:all .18s;font-weight:500}
-.nav-btn:hover{color:var(--text);border-color:var(--border2);background:rgba(184,134,11,.05)}
-.nav-btn.primary{background:var(--gold-grad);color:#FFFFFF;border-color:var(--accent);font-weight:700;box-shadow:0 2px 8px rgba(184,134,11,0.22)}
-.generate-btn{margin:0 20px 16px;padding:13px;background:var(--gold-grad);color:#FFFFFF;border:none;border-radius:10px;font-family:'Lexend',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;flex-shrink:0;box-shadow:0 3px 14px rgba(184,134,11,0.30),0 1px 4px rgba(184,134,11,0.18)}
-.generate-btn:hover{opacity:.93;transform:translateY(-1px);box-shadow:0 6px 20px rgba(184,134,11,0.36)}
-.hint-box{background:rgba(255,255,255,0.7);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
-.hint-title{font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px}
-.hint-body{font-size:12px;color:var(--muted);line-height:1.6}
-.info-box{background:rgba(255,255,255,0.6);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.7}
-.info-box .ib-title{font-size:11px;color:var(--accent);font-weight:600;margin-bottom:6px}
-/* MAIN */
-.main{padding:28px 36px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
-.main-title{font-size:38px;font-weight:800;line-height:1;color:var(--text)}
-.main-title em{background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
-.main-sub{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.6;max-width:400px}
-.summary-strip{background:linear-gradient(135deg,#FFFFFF 0%,#F8F6EE 100%);border:1px solid var(--border2);border-radius:12px;padding:12px 18px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;box-shadow:0 1px 6px rgba(160,140,60,0.08)}
-.sum-item{display:flex;align-items:center;gap:5px;font-size:12px}
-.sum-label{color:var(--muted);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
-.sum-val{color:var(--text);font-weight:500}
-.sum-empty{color:var(--muted)}
-.sum-dot{width:3px;height:3px;border-radius:50%;background:var(--border2);flex-shrink:0}
-.instruction-box{background:linear-gradient(135deg,rgba(184,134,11,.06) 0%,rgba(232,184,32,.03) 100%);border:1px solid rgba(184,134,11,.18);border-radius:12px;padding:16px 20px}
-.instruction-box h3{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--accent);margin-bottom:10px;text-transform:uppercase}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.step{display:flex;gap:8px;align-items:flex-start}
-.step-n{font-size:18px;font-weight:800;background:var(--gold-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;flex-shrink:0}
-.step-text{font-size:12px;color:var(--muted);line-height:1.5}
-.output-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.output-card{background:linear-gradient(160deg,#FFFFFF 0%,#F8F6EE 100%);border:1px solid var(--border2);border-radius:12px;padding:17px 19px;transition:border-color .2s,box-shadow .2s;animation:fadeUp .35s ease both;box-shadow:0 1px 6px rgba(160,140,60,0.07)}
-.output-card:hover{border-color:rgba(184,134,11,.30);box-shadow:0 4px 16px rgba(184,134,11,.11)}
-.output-card.full{grid-column:1/-1}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.card-type{font-size:10px;letter-spacing:1.5px;color:var(--accent);font-weight:600;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.card-type-icon{width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;background:rgba(184,134,11,.12);border-radius:4px;font-size:11px}
-.card-type.green{color:var(--accent3)}.card-type.green .card-type-icon{background:rgba(138,122,96,.12)}
-.card-type.red{color:var(--accent2)}.card-type.red .card-type-icon{background:rgba(154,104,0,.10)}
-.prompt-text{font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.8;color:var(--text);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:break-word;max-height:210px;overflow-y:auto;scrollbar-width:thin}
-.prompt-text::-webkit-scrollbar{width:3px}
-.prompt-text::-webkit-scrollbar-thumb{background:var(--border2)}
-.hl-yellow{color:var(--accent)}.hl-green{color:var(--accent3)}.hl-red{color:var(--accent2)}
-.card-actions{display:flex;gap:7px;margin-top:10px}
-.action-btn{padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;transition:all .18s;font-family:'Lexend',sans-serif;display:flex;align-items:center;gap:4px}
-.action-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(184,134,11,.05)}
-.action-btn.copied{border-color:var(--accent3);color:var(--accent3)}
-/* SAVED */
-.saved-section{background:linear-gradient(160deg,#FFFFFF 0%,#F8F6EE 100%);border:1px solid var(--border2);border-radius:12px;padding:17px 19px;box-shadow:0 1px 6px rgba(160,140,60,0.07)}
-.saved-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px;gap:10px}
-.saved-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.storage-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid rgba(138,122,96,.32);color:var(--accent3);background:rgba(138,122,96,.08);vertical-align:middle;margin-left:6px;letter-spacing:.5px}
-.saved-count{font-size:11px;color:var(--muted);margin-top:3px}
-.clear-btn{font-size:11px;color:var(--accent2);background:transparent;border:none;cursor:pointer;font-family:'Lexend',sans-serif;white-space:nowrap}
-.saved-list{display:flex;flex-direction:column;gap:6px}
-.saved-item{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);animation:fadeUp .3s ease}
-.saved-item-meta{flex:1;min-width:0}
-.saved-item-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.saved-item-tags{display:flex;gap:4px;flex-wrap:wrap}
-.mini-tag{font-size:10px;padding:2px 7px;border-radius:999px;background:rgba(184,134,11,.10);color:var(--accent)}
-.saved-item-actions{display:flex;gap:5px;flex-shrink:0}
-.icon-btn{width:27px;height:27px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .18s}
-.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
-.icon-btn.del:hover{border-color:var(--accent2);color:var(--accent2)}
-.empty-state{text-align:center;padding:20px;color:var(--muted);font-size:13px;line-height:1.6}
-.loading-state{text-align:center;padding:20px;color:var(--muted);font-size:13px}
-.saving-indicator{font-size:11px;color:var(--accent3);display:none;align-items:center;gap:4px}
-.saving-indicator.show{display:flex}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:10px;height:10px;border:1.5px solid rgba(138,122,96,.3);border-top-color:var(--accent3);border-radius:50%;animation:spin .6s linear infinite}
-
-/* ===== RESPONSIVE ===== */
-
-/* Tablet: ≤ 900px — ẩn tab rail, thu step panel */
-@media(max-width:900px){
-  .app.show{grid-template-columns:0 260px 1fr}
-  .tab-rail{display:none}
-  .step-panel{border-right:1px solid var(--border)}
-  .main{padding:20px 20px}
-  .main-title{font-size:28px}
-  .steps{grid-template-columns:repeat(2,1fr)}
-  .output-grid{grid-template-columns:1fr}
-  .output-card.full{grid-column:1}
-}
-
-/* Mobile: ≤ 640px — layout dọc hoàn toàn */
-@media(max-width:640px){
-  /* App chuyển sang layout dọc */
-  .app.show{
-    display:flex;
-    flex-direction:column;
-    min-height:100vh;
-  }
-
-  /* Top bar gọn hơn */
-  .top-bar{
-    padding:0 14px;
-    height:48px;
-    grid-column:unset;
-    position:sticky;
-    top:0;
-    z-index:100;
-  }
-  .top-bar-logo{font-size:12px}
-  .storage-badge{display:none}
-  .saving-indicator{display:none!important}
-  .user-email{display:none}
-  .logout-btn{padding:4px 9px;font-size:10px}
-
-  /* Tab rail ẩn hoàn toàn, thay bằng bottom nav */
-  .tab-rail{display:none}
-
-  /* Step panel full width, chiều cao tự động */
-  .step-panel{
-    position:relative;
-    top:0;
-    height:auto;
-    width:100%;
-    border-right:none;
-    border-bottom:1px solid var(--border);
-    max-height:70vh;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-  }
-
-  .tab-pane{
-    height:auto;
-    max-height:calc(70vh - 48px);
-  }
-
-  .panel-body{
-    padding:12px 16px;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-
-  .panel-header{padding:14px 16px 10px}
-  .panel-nav{padding:10px 16px}
-  .generate-btn{margin:0 16px 14px;padding:12px;font-size:13px}
-
-  /* Main area */
-  .main{
-    padding:16px;
-    gap:14px;
-    overflow-y:visible;
-  }
-  .main-title{font-size:24px}
-  .main-sub{font-size:12px;max-width:100%}
-
-  /* Summary strip cuộn ngang */
-  .summary-strip{
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding:10px 14px;
-    gap:8px;
-    scrollbar-width:none;
-  }
-  .summary-strip::-webkit-scrollbar{display:none}
-  .sum-dot{flex-shrink:0}
-  .sum-item{flex-shrink:0}
-
-  /* Steps hướng dẫn: 1 cột */
-  .steps{grid-template-columns:1fr;gap:8px}
-
-  /* Output cards: 1 cột */
-  .output-grid{grid-template-columns:1fr;gap:10px}
-  .output-card.full{grid-column:1}
-  .output-card{padding:14px}
-
-  /* Saved section */
-  .saved-section{padding:14px}
-
-  /* Multi badges cuộn ngang */
-  .multi-badges{
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:4px;
-    scrollbar-width:none;
-  }
-  .multi-badges::-webkit-scrollbar{display:none}
-  .mbadge{flex-shrink:0}
-
-  /* Auth card padding nhỏ hơn */
-  .auth-card{padding:28px 20px}
-
-  /* Bottom nav bar cho mobile */
-  .mobile-bottom-nav{
-    display:flex;
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:linear-gradient(180deg,#F8F6EE 0%,#FFFFFF 100%);
-    border-top:1px solid var(--border2);
-    z-index:200;
-    padding:6px 4px;
-    gap:2px;
-    overflow-x:auto;
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-    box-shadow:0 -2px 12px rgba(160,140,60,0.10);
-  }
-  .mobile-bottom-nav::-webkit-scrollbar{display:none}
-  .mobile-bottom-nav .tab-btn{
-    flex-shrink:0;
-    width:40px;
-    height:40px;
-    border-radius:8px;
-  }
-  .mobile-bottom-nav .tab-btn.active::after{
-    display:none;
-  }
-  /* Padding bù cho bottom nav */
-  .app.show{padding-bottom:60px}
-}
-
-/* Hiện bottom nav chỉ trên mobile */
-.mobile-bottom-nav{display:none}
-@media(max-width:640px){
-  .mobile-bottom-nav{display:flex}
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ===== AUTH SCREEN ===== -->
-<div class="auth-screen" id="auth-screen">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-        <rect width="36" height="36" rx="10" fill="rgba(184,134,11,0.12)"/>
-        <path d="M8 26V10L14.5 20.5L18 14L21.5 20.5L28 10V26" stroke="#C8900A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="28" cy="10" r="2.5" fill="#E8B820"/>
-      </svg>
-      <div>
-        <div class="auth-logo-name">MUZI</div>
-        <div class="auth-logo-sub">Prompt Studio</div>
-      </div>
-    </div>
-    <div id="auth-error" class="auth-error"></div>
-    <div id="auth-msg" class="auth-msg"></div>
-
-    <!-- LOGIN FORM -->
-    <div id="form-login">
-      <div class="auth-title">Đăng nhập</div>
-      <div class="auth-sub">Chào mừng trở lại team Muzi Studio!</div>
-      <div class="auth-field">
-        <label class="auth-label">Email</label>
-        <input type="email" class="auth-input" id="login-email" placeholder="ten@email.com" autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label class="auth-label">Mật khẩu</label>
-        <input type="password" class="auth-input" id="login-password" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button class="auth-btn" id="btn-login" onclick="doLogin()">Đăng nhập</button>
-      <div class="auth-toggle">Chưa có tài khoản? <a onclick="switchForm('register')">Đăng ký</a></div>
-    </div>
-
-    <!-- REGISTER FORM -->
-    <div id="form-register" style="display:none">
-      <div class="auth-title">Tạo tài khoản</div>
-      <div class="auth-sub">Tham gia Muzi Studio team</div>
-      <div class="auth-field">
-        <label class="auth-label">Tên hiển thị</label>
-        <input type="text" class="auth-input" id="reg-name" placeholder="VD: Muzi">
-      </div>
-      <div class="auth-field">
-        <label class="auth-label">Email</label>
-        <input type="email" class="auth-input" id="reg-email" placeholder="ten@email.com">
-      </div>
-      <div class="auth-field">
-        <label class="auth-label">Mật khẩu</label>
-        <input type="password" class="auth-input" id="reg-password" placeholder="Tối thiểu 6 ký tự">
-      </div>
-      <button class="auth-btn" id="btn-register" onclick="doRegister()">Tạo tài khoản</button>
-      <div class="auth-toggle">Đã có tài khoản? <a onclick="switchForm('login')">Đăng nhập</a></div>
-    </div>
-  </div>
-</div>
-
 <!-- ===== APP ===== -->
 <div class="app" id="app">
+
   <!-- TOP BAR -->
   <div class="top-bar" style="grid-column:1/-1">
     <div class="top-bar-left">
       <div class="top-bar-logo">MUZI STUDIO</div>
-      <span class="storage-badge">☁️ Supabase</span>
-      <span class="saving-indicator" id="saving-indicator"><span class="spinner"></span> Đang lưu...</span>
     </div>
     <div class="top-bar-right">
-      <div class="user-pill">
-        <div class="user-avatar" id="user-avatar">M</div>
-        <span class="user-email" id="user-email">...</span>
-      </div>
-      <button class="logout-btn" onclick="doLogout()">Đăng xuất</button>
+      <button class="lang-mini active" id="lang-vi" onclick="setLang('vi')" style="width:auto;padding:0 10px">VI</button>
+      <button class="lang-mini" id="lang-en" onclick="setLang('en')" style="width:auto;padding:0 10px">EN</button>
     </div>
   </div>
 
   <!-- TAB RAIL -->
   <nav class="tab-rail">
     <div class="rail-divider"></div>
-    <button class="tab-btn active" data-tab="0" onclick="goTab(0)" title="Thiết lập"><span class="tab-ico">⚙</span><span class="tab-num">0</span></button>
-    <button class="tab-btn" data-tab="1" onclick="goTab(1)" title="Ý tưởng"><span class="tab-ico">💡</span><span class="tab-num">1</span></button>
-    <button class="tab-btn" data-tab="2" onclick="goTab(2)" title="Mục tiêu"><span class="tab-ico">🎯</span><span class="tab-num">2</span></button>
-    <button class="tab-btn" data-tab="3" onclick="goTab(3)" title="Chủ đề"><span class="tab-ico">📌</span><span class="tab-num">3</span></button>
-    <button class="tab-btn" data-tab="4" onclick="goTab(4)" title="Ngách"><span class="tab-ico">🔍</span><span class="tab-num">4</span></button>
-    <button class="tab-btn" data-tab="5" onclick="goTab(5)" title="Công thức"><span class="tab-ico">⚗</span><span class="tab-num">5</span></button>
-    <button class="tab-btn" data-tab="6" onclick="goTab(6)" title="Đầu ra"><span class="tab-ico">📤</span><span class="tab-num">6</span></button>
-    <button class="tab-btn" data-tab="7" onclick="goTab(7)" title="Nền tảng & Thời lượng"><span class="tab-ico">📱</span><span class="tab-num">7</span></button>
-    <button class="tab-btn" data-tab="8" onclick="goTab(8)" title="Phong cách"><span class="tab-ico">🎨</span><span class="tab-num">8</span></button>
-    <button class="tab-btn" data-tab="9" onclick="goTab(9)" title="Sản phẩm"><span class="tab-ico">🛍</span><span class="tab-num">9</span></button>
-    <button class="tab-btn" data-tab="10" onclick="goTab(10)" title="Mood & Màu sắc"><span class="tab-ico">🎭</span><span class="tab-num">10</span></button>
+    <button class="tab-btn active" data-tab="0"  onclick="goTab(0)"  title="Thiết lập">           <span class="tab-ico">⚙</span><span class="tab-num">0</span></button>
+    <button class="tab-btn"        data-tab="1"  onclick="goTab(1)"  title="Ý tưởng">             <span class="tab-ico">💡</span><span class="tab-num">1</span></button>
+    <button class="tab-btn"        data-tab="2"  onclick="goTab(2)"  title="Mục tiêu">            <span class="tab-ico">🎯</span><span class="tab-num">2</span></button>
+    <button class="tab-btn"        data-tab="3"  onclick="goTab(3)"  title="Chủ đề">              <span class="tab-ico">📌</span><span class="tab-num">3</span></button>
+    <button class="tab-btn"        data-tab="4"  onclick="goTab(4)"  title="Ngách">               <span class="tab-ico">🔍</span><span class="tab-num">4</span></button>
+    <button class="tab-btn"        data-tab="5"  onclick="goTab(5)"  title="Công thức">           <span class="tab-ico">⚗</span><span class="tab-num">5</span></button>
+    <button class="tab-btn"        data-tab="6"  onclick="goTab(6)"  title="Đầu ra">              <span class="tab-ico">📤</span><span class="tab-num">6</span></button>
+    <button class="tab-btn"        data-tab="7"  onclick="goTab(7)"  title="Nền tảng & Thời lượng"><span class="tab-ico">📱</span><span class="tab-num">7</span></button>
+    <button class="tab-btn"        data-tab="8"  onclick="goTab(8)"  title="Phong cách">          <span class="tab-ico">🎨</span><span class="tab-num">8</span></button>
+    <button class="tab-btn"        data-tab="9"  onclick="goTab(9)"  title="Sản phẩm">            <span class="tab-ico">🛍</span><span class="tab-num">9</span></button>
+    <button class="tab-btn"        data-tab="10" onclick="goTab(10)" title="Mood & Màu sắc">      <span class="tab-ico">🎭</span><span class="tab-num">10</span></button>
     <div class="rail-bottom">
       <div class="rail-divider"></div>
-      <button class="lang-mini active" id="lang-vi" onclick="setLang('vi')">VI</button>
-      <button class="lang-mini" id="lang-en" onclick="setLang('en')">EN</button>
+      <button class="lang-mini active" id="lang-vi2" onclick="setLang('vi')">VI</button>
+      <button class="lang-mini"        id="lang-en2" onclick="setLang('en')">EN</button>
     </div>
   </nav>
 
@@ -448,7 +48,7 @@ textarea::placeholder{color:var(--muted)}
   <div class="step-panel">
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
 
-    <!-- PANE 0 -->
+    <!-- PANE 0 — Thiết lập -->
     <div class="tab-pane active" id="pane-0">
       <div class="panel-header">
         <div class="panel-step-num">Thiết lập</div>
@@ -459,7 +59,7 @@ textarea::placeholder{color:var(--muted)}
           <div class="field-label">Loại hình nội dung</div>
           <div class="mode-toggle">
             <button class="mode-btn active" id="mode-biz" onclick="setMode('business')">🔵 Kinh doanh</button>
-            <button class="mode-btn" id="mode-pod" onclick="setMode('podcast')">🟠 Podcast</button>
+            <button class="mode-btn"        id="mode-pod" onclick="setMode('podcast')">🟠 Podcast</button>
           </div>
         </div>
         <div class="info-box">
@@ -470,7 +70,7 @@ textarea::placeholder{color:var(--muted)}
       <div class="panel-nav"><button class="nav-btn primary" onclick="goTab(1)">Bắt đầu →</button></div>
     </div>
 
-    <!-- PANE 1 -->
+    <!-- PANE 1 — Ý tưởng -->
     <div class="tab-pane" id="pane-1">
       <div class="panel-header"><div class="panel-step-num">Bước 1/10</div><div class="panel-title">Ý tưởng nội dung</div></div>
       <div class="panel-body">
@@ -480,75 +80,175 @@ textarea::placeholder{color:var(--muted)}
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(0)">← Lại</button><button class="nav-btn primary" onclick="goTab(2)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 2 -->
+    <!-- PANE 2 — Mục tiêu -->
     <div class="tab-pane" id="pane-2">
       <div class="panel-header"><div class="panel-step-num">Bước 2/10</div><div class="panel-title">Mục tiêu nội dung</div></div>
       <div class="panel-body">
-        <div><div class="field-label">Mục tiêu chính</div><div class="custom-select" id="cs-goal"><button class="cs-trigger" onclick="toggleCS('cs-goal')"><span class="cs-val placeholder" id="cs-goal-val">— Chọn mục tiêu —</span><span class="cs-arrow">▼</span></button><div class="cs-dropdown" id="cs-goal-drop"></div></div></div>
-        <div><div class="field-label" id="conversion-label">Chuyển đổi (chọn nhiều)</div><div class="multi-badges" id="badges-conversion"></div></div>
+        <div><div class="field-label">Mục tiêu chính</div>
+          <div class="custom-select" id="cs-goal">
+            <button class="cs-trigger" onclick="toggleCS('cs-goal')"><span class="cs-val placeholder" id="cs-goal-val">— Chọn mục tiêu —</span><span class="cs-arrow">▼</span></button>
+            <div class="cs-dropdown" id="cs-goal-drop"></div>
+          </div>
+        </div>
+        <div><div class="field-label">Chuyển đổi (chọn nhiều)</div><div class="multi-badges" id="badges-conversion"></div></div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(1)">← Lại</button><button class="nav-btn primary" onclick="goTab(3)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 3 -->
+    <!-- PANE 3 — Chủ đề -->
     <div class="tab-pane" id="pane-3">
       <div class="panel-header"><div class="panel-step-num">Bước 3/10</div><div class="panel-title">Chủ đề nội dung</div></div>
       <div class="panel-body">
-        <div><div class="field-label">Chọn chủ đề</div><div class="custom-select" id="cs-topic"><button class="cs-trigger" onclick="toggleCS('cs-topic')"><span class="cs-val placeholder" id="cs-topic-val">— Chọn chủ đề —</span><span class="cs-arrow">▼</span></button><div class="cs-dropdown" id="cs-topic-drop"></div></div></div>
+        <div><div class="field-label">Chọn chủ đề</div>
+          <div class="custom-select" id="cs-topic">
+            <button class="cs-trigger" onclick="toggleCS('cs-topic')"><span class="cs-val placeholder" id="cs-topic-val">— Chọn chủ đề —</span><span class="cs-arrow">▼</span></button>
+            <div class="cs-dropdown" id="cs-topic-drop"></div>
+          </div>
+        </div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(2)">← Lại</button><button class="nav-btn primary" onclick="goTab(4)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 4 -->
+    <!-- PANE 4 — Ngách -->
     <div class="tab-pane" id="pane-4">
       <div class="panel-header"><div class="panel-step-num">Bước 4/10</div><div class="panel-title">Ngách nội dung</div></div>
       <div class="panel-body">
-        <div><div class="niche-gen-bar"><div class="field-label" style="margin-bottom:0">Ngách từ chủ đề</div><button class="niche-gen-btn" onclick="generateNichePrompt()">✦ Tạo ngách AI</button></div><div class="custom-select" id="cs-niche"><button class="cs-trigger" onclick="toggleCS('cs-niche')"><span class="cs-val placeholder" id="cs-niche-val">— Chọn chủ đề trước —</span><span class="cs-arrow">▼</span></button><div class="cs-dropdown" id="cs-niche-drop"></div></div></div>
-        <div class="niche-prompt-box" id="niche-prompt-box"><div class="niche-prompt-header"><span class="niche-prompt-title">📋 Prompt tạo ngách</span><button class="action-btn" style="padding:3px 9px;font-size:11px" onclick="copyNichePrompt(this)">Copy</button></div><div class="prompt-text" id="niche-prompt-text" style="border-radius:0 0 8px 8px;max-height:130px;font-size:11px"></div></div>
+        <div>
+          <div class="niche-gen-bar">
+            <div class="field-label" style="margin-bottom:0">Ngách từ chủ đề</div>
+            <button class="niche-gen-btn" onclick="generateNichePrompt()">✦ Tạo ngách AI</button>
+          </div>
+          <div class="custom-select" id="cs-niche">
+            <button class="cs-trigger" onclick="toggleCS('cs-niche')"><span class="cs-val placeholder" id="cs-niche-val">— Chọn chủ đề trước —</span><span class="cs-arrow">▼</span></button>
+            <div class="cs-dropdown" id="cs-niche-drop"></div>
+          </div>
+        </div>
+        <div class="niche-prompt-box" id="niche-prompt-box">
+          <div class="niche-prompt-header">
+            <span class="niche-prompt-title">📋 Prompt tạo ngách</span>
+            <button class="action-btn" style="padding:3px 9px;font-size:11px" onclick="copyNichePrompt(this)">Copy</button>
+          </div>
+          <div class="prompt-text" id="niche-prompt-text" style="border-radius:0 0 8px 8px;max-height:130px;font-size:11px"></div>
+        </div>
         <div><div class="niche-result-label">Hoặc dán kết quả AI vào đây:</div><textarea id="txt-niche-result" rows="3" placeholder="Dán kết quả ngách từ AI..."></textarea></div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(3)">← Lại</button><button class="nav-btn primary" onclick="goTab(5)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 5 -->
+    <!-- PANE 5 — Công thức -->
     <div class="tab-pane" id="pane-5">
       <div class="panel-header"><div class="panel-step-num">Bước 5/10</div><div class="panel-title">Công thức triển khai</div></div>
       <div class="panel-body">
-        <div><div class="field-label">Chọn công thức</div><div class="custom-select" id="cs-formula"><button class="cs-trigger" onclick="toggleCS('cs-formula')"><span class="cs-val placeholder" id="cs-formula-val">— Chọn công thức —</span><span class="cs-arrow">▼</span></button><div class="cs-dropdown" id="cs-formula-drop"></div></div></div>
+        <div><div class="field-label">Chọn công thức</div>
+          <div class="custom-select" id="cs-formula">
+            <button class="cs-trigger" onclick="toggleCS('cs-formula')"><span class="cs-val placeholder" id="cs-formula-val">— Chọn công thức —</span><span class="cs-arrow">▼</span></button>
+            <div class="cs-dropdown" id="cs-formula-drop"></div>
+          </div>
+        </div>
         <div class="hint-box" id="formula-hint"><div class="hint-title">Mô tả công thức</div><div class="hint-body">Chọn công thức để xem mô tả.</div></div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(4)">← Lại</button><button class="nav-btn primary" onclick="goTab(6)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 6 -->
+    <!-- PANE 6 — Đầu ra -->
     <div class="tab-pane" id="pane-6">
-      <div class="panel-header"><div class="panel-step-num">Bước 6/10</div><div class="panel-title">Định dạng đầu ra</div></div>
-      <div class="panel-body"><div><div class="field-label">Chọn đầu ra (nhiều)</div><div class="multi-badges" id="badges-output"></div></div></div>
+      <div class="panel-header">
+        <div class="panel-step-num">Bước 6/10</div>
+        <div class="panel-title">Định dạng đầu ra</div>
+        <div class="panel-desc">Tuỳ chọn áp dụng cho Prompt ảnh & video AI</div>
+      </div>
+      <div class="panel-body">
+
+        <!-- Loại đầu ra -->
+        <div>
+          <div class="field-label">Loại đầu ra (nhiều)</div>
+          <div class="multi-badges" id="badges-output"></div>
+        </div>
+
+        <!-- Khung hình -->
+        <div>
+          <div class="field-label">🖼 Khung hình</div>
+          <div class="multi-badges">
+            <span class="mbadge sel-g" id="ar-9-16" onclick="selectAR(this,'9:16')">9:16 <span style="opacity:.55;font-size:10px">Dọc</span></span>
+            <span class="mbadge"       id="ar-16-9" onclick="selectAR(this,'16:9')">16:9 <span style="opacity:.55;font-size:10px">Ngang</span></span>
+            <span class="mbadge"       id="ar-1-1"  onclick="selectAR(this,'1:1')">1:1 <span style="opacity:.55;font-size:10px">Vuông</span></span>
+            <span class="mbadge"       id="ar-4-5"  onclick="selectAR(this,'4:5')">4:5 <span style="opacity:.55;font-size:10px">Feed</span></span>
+          </div>
+        </div>
+
+        <!-- Chất lượng -->
+        <div>
+          <div class="field-label">✨ Chất lượng render</div>
+          <div class="multi-badges">
+            <span class="mbadge"       id="q-hd"  onclick="selectQ(this,'HD')">HD</span>
+            <span class="mbadge sel-g" id="q-4k"  onclick="selectQ(this,'4K')">4K</span>
+            <span class="mbadge"       id="q-8k"  onclick="selectQ(this,'8K')">8K</span>
+          </div>
+        </div>
+
+        <!-- Số lượng prompt -->
+        <div>
+          <div class="field-label" style="margin-bottom:10px">🔢 Số prompt ảnh / video xuất ra</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <button onclick="changeQty(-1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--text);font-size:16px;cursor:pointer;font-family:Lexend,sans-serif;line-height:1;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)'">−</button>
+            <div style="display:flex;align-items:baseline;gap:4px">
+              <span id="qty-display" style="font-size:22px;font-weight:800;color:var(--deep-gold);font-family:Lexend,sans-serif;line-height:1">6</span>
+              <span style="font-size:11px;color:var(--muted)">prompt</span>
+            </div>
+            <button onclick="changeQty(+1)" style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--text);font-size:16px;cursor:pointer;font-family:Lexend,sans-serif;line-height:1;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)'">＋</button>
+            <span style="font-size:11px;color:var(--muted)">(1–12)</span>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.5">Mỗi prompt sẽ mô tả 1 cảnh/hình bám sát nội dung kịch bản đã điền.</div>
+        </div>
+
+      </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(5)">← Lại</button><button class="nav-btn primary" onclick="goTab(7)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 7 -->
+    <!-- PANE 7 — Nền tảng & Thời lượng -->
     <div class="tab-pane" id="pane-7">
       <div class="panel-header"><div class="panel-step-num">Bước 7/10</div><div class="panel-title">Nền tảng & Thời lượng</div></div>
       <div class="panel-body">
-        <div><div class="field-label">Nền tảng (nhiều)</div><div class="multi-badges" id="badges-platform"><span class="mbadge" onclick="toggleBadge(this,'sel-g')">TikTok</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">YouTube</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">YouTube Shorts</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Spotify</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Instagram Reels</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Facebook</span></div></div>
-        <div><div class="field-label">Độ dài mục tiêu</div><div class="custom-select" id="cs-duration"><button class="cs-trigger" onclick="toggleCS('cs-duration')"><span class="cs-val placeholder" id="cs-duration-val">— Chọn thời lượng —</span><span class="cs-arrow">▼</span></button><div class="cs-dropdown" id="cs-duration-drop"></div></div></div>
-        <div class="hint-box" id="duration-hint" style="display:none"><div class="hint-title" id="dur-hint-title"></div><div class="hint-body" id="dur-hint-body"></div></div>
+        <div><div class="field-label">Nền tảng (nhiều)</div>
+          <div class="multi-badges" id="badges-platform">
+            <span class="mbadge" onclick="toggleBadge(this,'sel-g')">TikTok</span>
+            <span class="mbadge" onclick="toggleBadge(this,'sel-g')">YouTube</span>
+            <span class="mbadge" onclick="toggleBadge(this,'sel-g')">YouTube Shorts</span>
+            <span class="mbadge" onclick="toggleBadge(this,'sel-g')">Spotify</span>
+            <span class="mbadge" onclick="toggleBadge(this,'sel-g')">Instagram Reels</span>
+            <span class="mbadge" onclick="toggleBadge(this,'sel-g')">Facebook</span>
+          </div>
+        </div>
+        <div><div class="field-label">Độ dài mục tiêu</div>
+          <div class="custom-select" id="cs-duration">
+            <button class="cs-trigger" onclick="toggleCS('cs-duration')"><span class="cs-val placeholder" id="cs-duration-val">— Chọn thời lượng —</span><span class="cs-arrow">▼</span></button>
+            <div class="cs-dropdown" id="cs-duration-drop"></div>
+          </div>
+        </div>
+        <div class="hint-box" id="duration-hint" style="display:none">
+          <div class="hint-title" id="dur-hint-title"></div>
+          <div class="hint-body"  id="dur-hint-body"></div>
+        </div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(6)">← Lại</button><button class="nav-btn primary" onclick="goTab(8)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 8 -->
+    <!-- PANE 8 — Phong cách -->
     <div class="tab-pane" id="pane-8">
       <div class="panel-header"><div class="panel-step-num">Bước 8/10</div><div class="panel-title">Phong cách video</div></div>
       <div class="panel-body">
-        <div><div class="field-label">Phong cách</div><div class="custom-select" id="cs-style"><button class="cs-trigger" onclick="toggleCS('cs-style')"><span class="cs-val placeholder" id="cs-style-val">— Chọn phong cách —</span><span class="cs-arrow">▼</span></button><div class="cs-dropdown" id="cs-style-drop"></div></div></div>
+        <div><div class="field-label">Phong cách</div>
+          <div class="custom-select" id="cs-style">
+            <button class="cs-trigger" onclick="toggleCS('cs-style')"><span class="cs-val placeholder" id="cs-style-val">— Chọn phong cách —</span><span class="cs-arrow">▼</span></button>
+            <div class="cs-dropdown" id="cs-style-drop"></div>
+          </div>
+        </div>
         <div class="hint-box" id="style-hint"><div class="hint-title">Mô tả phong cách</div><div class="hint-body">Chọn phong cách để xem mô tả.</div></div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(7)">← Lại</button><button class="nav-btn primary" onclick="goTab(9)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 9 -->
+    <!-- PANE 9 — Sản phẩm -->
     <div class="tab-pane" id="pane-9">
       <div class="panel-header"><div class="panel-step-num">Bước 9/10</div><div class="panel-title">Sản phẩm & Thông tin</div></div>
       <div class="panel-body">
@@ -558,18 +258,23 @@ textarea::placeholder{color:var(--muted)}
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(8)">← Lại</button><button class="nav-btn primary" onclick="goTab(10)">Tiếp →</button></div>
     </div>
 
-    <!-- PANE 10 -->
+    <!-- PANE 10 — Mood + Phong cách phụ (render động theo mode) -->
     <div class="tab-pane" id="pane-10">
-      <div class="panel-header"><div class="panel-step-num">Bước 10/10</div><div class="panel-title">Mood · Phong cách phụ · Màu sắc</div></div>
+      <div class="panel-header">
+        <div class="panel-step-num">Bước 10/10</div>
+        <div class="panel-title" id="pane10-title">Mood · Phong cách phụ · Màu sắc</div>
+        <div class="panel-desc"  id="pane10-desc"></div>
+      </div>
       <div class="panel-body">
-        <div><div class="field-label">🎭 Mood (nhiều)</div><div class="multi-badges" id="badges-mood"><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Hứng khởi / Năng lượng cao</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Chân thật / Gần gũi</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Sâu lắng / Chiêm nghiệm</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Hài hước / Nhẹ nhàng</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Cấp bách / Thôi thúc</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Cảm hứng / Truyền động lực</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Tự tin / Quyết đoán</span><span class="mbadge" onclick="toggleBadge(this,'sel-y')">Ấm áp / Chữa lành</span></div></div>
-        <div><div class="field-label">🎬 Phong cách phụ (nhiều)</div><div class="multi-badges" id="badges-substyle"><span class="mbadge" onclick="toggleBadge(this,'sel-g')">POV</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Talking head</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">B-roll nặng</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Text-driven</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Montage</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Behind the scenes</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">Documentary</span><span class="mbadge" onclick="toggleBadge(this,'sel-g')">ASMR / Lo-fi</span></div></div>
-        <div><div class="field-label">🎨 Tông màu cảm xúc (nhiều)</div><div class="multi-badges" id="badges-color"><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #f5c842">Ấm áp / Sang trọng</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #333">Tối / Kịch tính</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #f9b8d4">Nhẹ nhàng / Nữ tính</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #e8e8e8">Sạch / Tối giản</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #5fc4f5">Lạnh / Hiện đại</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #a8e6a3">Tươi / Chữa lành</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #e08060">Mạnh / Năng lượng</span><span class="mbadge" onclick="toggleBadge(this,'sel-r')" style="border-left:3px solid #b8a0e8">Huyền bí / Sáng tạo</span></div></div>
+        <div><div class="field-label" id="label-mood">🎭 Mood cảm xúc (chọn 1–2)</div><div class="multi-badges" id="badges-mood"></div></div>
+        <div><div class="field-label" id="label-substyle">🎬 Phong cách phụ (nhiều)</div><div class="multi-badges" id="badges-substyle"></div></div>
+        <div><div class="field-label">🎨 Tông màu cảm xúc (nhiều)</div><div class="multi-badges" id="badges-color"></div></div>
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(9)">← Lại</button></div>
       <button class="generate-btn" onclick="generatePrompts()">⚡ XUẤT PROMPT NGAY</button>
     </div>
-  </div>
+
+  </div><!-- end step-panel -->
 
   <!-- MAIN -->
   <main class="main">
@@ -594,567 +299,35 @@ textarea::placeholder{color:var(--muted)}
         <div class="step"><div class="step-n">01</div><div class="step-text">Chọn mode & ý tưởng tab 0–1</div></div>
         <div class="step"><div class="step-n">02</div><div class="step-text">Mục tiêu, chủ đề, ngách tab 2–4</div></div>
         <div class="step"><div class="step-n">03</div><div class="step-text">Công thức, đầu ra, phong cách 5–8</div></div>
-        <div class="step"><div class="step-n">04</div><div class="step-text">Tab 9–10 → Xuất → Lưu Supabase</div></div>
+        <div class="step"><div class="step-n">04</div><div class="step-text">Tab 9–10 → Xuất → Copy prompt</div></div>
       </div>
     </div>
-    <div id="output-area" style="display:none"><div class="output-grid" id="output-grid"></div></div>
-    <div class="saved-section">
-      <div class="saved-header">
-        <div><div class="saved-title">Prompt đã lưu <span class="storage-badge">☁️ Supabase</span></div><div class="saved-count" id="saved-count"></div></div>
-      </div>
-      <div class="saved-list" id="saved-list"><div class="loading-state">Đang tải...</div></div>
+    <div id="output-area" style="display:none">
+      <div class="output-grid" id="output-grid"></div>
     </div>
   </main>
-</div>
 
-<script>
-// =============================================
-// SUPABASE CONFIG — THAY THẾ 2 DÒNG NÀY
-// =============================================
-const SUPABASE_URL = 'https://bjcuuciqadukcpycggmx.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqY3V1Y2lxYWR1a2NweWNnZ214Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTc2MTAsImV4cCI6MjA4OTQ5MzYxMH0.CISg3L0enlODYOYMRhJODV0YmLKdIvmV3pLsYG_qJf4';
-// =============================================
+</div><!-- end app -->
 
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const DATA={business:{goals:['Bán hàng & Tăng doanh số','Thu hút khách hàng tiềm năng','Xây dựng thương hiệu cá nhân','Tăng tương tác & Giữ chân khách hàng','Giải quyết vấn đề'],topics:{'Giới thiệu & Bán hàng':['Giới thiệu sản phẩm mới & tính năng nổi bật','Chương trình khuyến mãi & ưu đãi giới hạn','Hướng dẫn mua hàng & chính sách bảo hành','Lý do chọn sản phẩm này thay vì đối thủ','Giải đáp thắc mắc về giá & công dụng'],'Xây dựng thương hiệu cá nhân':['Câu chuyện bản thân / Hành trình phát triển','Giá trị cốt lõi & Quan điểm làm nghề','Hậu trường công việc / Một ngày của tôi','Cam kết chất lượng & Quy trình làm việc','Sai lầm từng mắc & Bài học rút ra','Góc nhìn chuyên gia về ngành','Nguyên tắc không bao giờ thỏa hiệp'],'Giải quyết vấn đề & Chia sẻ giá trị':['Dấu hiệu nhận biết vấn đề','Sai lầm phổ biến & Cách phòng tránh','Cách tự xử lý cơ bản (DIY)','Phá bỏ hiểu lầm (Myth-busting)','Hậu quả của việc trì hoãn','3 bước giải quyết nhanh','Khi nào cần tìm chuyên gia'],'Review & Case Study':['Review chân thật / Đánh giá khách quan','Case study thành công có số liệu cụ thể','Câu chuyện chuyển đổi của khách hàng','Tổng hợp feedback nổi bật','Phân tích lý do thành công','Phỏng vấn khách hàng thực tế']},formulas:['AIDA','PAS','BAB','FAB','3S (Story)','4U','Hook Pain','Hook Curiosity','Hook Myth-bust','Storytelling','Listicle','Deep-dive'],outputs:['Kịch bản video ngắn','Kịch bản video dài','Storyboard phân cảnh','Prompt ảnh AI','Prompt video AI'],styles:['Cinematic','Minimalist','Vlog','Authority','Viral']},podcast:{goals:['Xây dựng cộng đồng & Kết nối','Truyền cảm hứng & Chiêm nghiệm','Chữa lành & Đồng hành cảm xúc','Tăng Follow / Đăng ký kênh dài hạn','Soft-selling qua nội dung giá trị'],topics:{'Chiêm nghiệm & Quan điểm sống':['Bài học từ một giai đoạn cuộc đời','Góc nhìn khác về vấn đề quen thuộc','Điều ước gì biết sớm hơn','Ranh giới giữa cố gắng và buông bỏ','Tại sao mình chọn sống chậm lại'],'Tài chính & Phát triển bản thân':['Thói quen nhỏ thay đổi cuộc đời','Sai lầm tài chính mình từng mắc phải','Cách xây dựng kỷ luật bản thân','Mindset về tiền bạc ít ai nói thật','Sách/Khóa học thay đổi tư duy'],'Kể chuyện / Chữa lành':['Câu chuyện vượt qua giai đoạn khó khăn','Khi chạm đáy và tìm lại bản thân','Nhận ra & thoát khỏi mối quan hệ độc hại','Đối mặt với áp lực xã hội','Thư gửi chính mình ngày xưa'],'Soft-selling qua cảm xúc':['Chia sẻ giá trị → Dẫn dắt vào sản phẩm','Câu chuyện khách hàng → CTA nhẹ','Giáo dục → Định vị chuyên gia → Mời tư vấn']},formulas:['Storytelling','Deep-dive','Listicle','Hook Story','Hook Emotion','Hook Confession'],outputs:['Dàn ý Podcast Solo','Kịch bản Podcast Solo','Bộ câu hỏi phỏng vấn','Kịch bản clip ngắn TikTok','Storyboard Visual Podcast','Prompt ảnh AI','Prompt video AI'],styles:['Healing','Vlog','Visual Podcast','Cinematic']}};
-const CONVERSION={
-  business:['Tương tác (Like/Comment/Share)','Tăng Follow / Sub kênh','Doanh số / Thêm giỏ hàng','Lead mềm (Inbox / Form)','Nhận diện thương hiệu','Tăng traffic website','Upsell / Cross-sell'],
-  podcast:['Tăng lượt nghe / Stream','Tăng Follow / Subscribe','Xây dựng cộng đồng','Inbox tư vấn / Kết nối','Share & Giới thiệu người khác','Tải app / Tham gia group','Soft-sell sản phẩm tự nhiên']
-};
-const DURATION={
-  business:[
-    {label:'15 giây',key:'15s',words:35,note:'~35 từ thoại. Hook cực ngắn, 1 thông điệp duy nhất. TikTok/Reels.'},
-    {label:'30 giây',key:'30s',words:65,note:'~65 từ thoại. Hook + 1 điểm chính + CTA. TikTok/Reels tốt nhất.'},
-    {label:'60 giây',key:'60s',words:130,note:'~130 từ thoại. Hook + 2–3 điểm + CTA. Chuẩn TikTok/Shorts.'},
-    {label:'3 phút',key:'3m',words:390,note:'~390 từ thoại. Đủ cho 1 câu chuyện ngắn hoặc hướng dẫn 3 bước.'},
-    {label:'5 phút',key:'5m',words:650,note:'~650 từ thoại. YouTube ngắn, review sản phẩm, case study.'},
-    {label:'10 phút',key:'10m',words:1300,note:'~1,300 từ thoại. YouTube tiêu chuẩn. Đủ cho 1 chủ đề chuyên sâu.'},
-    {label:'15 phút',key:'15m',words:1950,note:'~1,950 từ thoại. YouTube dài. Tutorial hoặc phân tích sâu.'}
-  ],
-  podcast:[
-    {label:'5 phút',key:'5m',words:650,note:'~650 từ thuần thoại (không mô tả hành động/không gian). Solo ngắn, 1 insight.'},,
-    {label:'10 phút',key:'10m',words:1300,note:'~1,300 từ thuần thoại. Podcast mini, 2–3 điểm chính.'},
-    {label:'15 phút',key:'15m',words:1950,note:'~1,950 từ thuần thoại. Podcast ngắn chuẩn. 1 câu chuyện hoàn chỉnh.'},
-    {label:'20 phút',key:'20m',words:2600,note:'~2,600 từ thuần thoại. Đủ cho chiêm nghiệm sâu hoặc case study.'},
-    {label:'30 phút',key:'30m',words:3900,note:'~3,900 từ thuần thoại. ⚠️ AI thường trả về ít hơn — yêu cầu rõ số từ.'},
-    {label:'45 phút',key:'45m',words:5850,note:'~5,850 từ thuần thoại. Podcast dài, cần outline chi tiết trước.'},
-    {label:'60 phút',key:'60m',words:7800,note:'~7,800 từ thuần thoại. Phải chia thành nhiều phần khi nhờ AI viết.'}
-  ]
-};
-const FORMULA_HINTS={'AIDA':'Chú ý → Thích → Muốn → Hành động. Cổ điển, hiệu quả cho bán hàng và CTA mạnh.','PAS':'Vấn đề → Khuếch đại nỗi đau → Giải pháp. Mạnh nhất cho video ngắn TikTok.','BAB':'Trước → Sau → Cầu nối. Lý tưởng cho case study và chứng minh kết quả.','FAB':'Tính năng → Thế mạnh → Lợi ích. Tốt cho video giới thiệu sản phẩm.','3S (Story)':'Nhân vật → Câu chuyện → Giải quyết. Xây dựng cảm xúc và niềm tin.','4U':'Có ích → Cấp bách → Độc nhất → Cụ thể. Tối ưu cho headline và hook.','Hook Pain':'Đánh thẳng vào nỗi đau trong 3 giây đầu. Stop-scroll cực mạnh.','Hook Curiosity':'Câu hỏi gây tò mò ngay mở đầu. Tăng watch-time hiệu quả.','Hook Myth-bust':'Phá vỡ hiểu lầm phổ biến. Tạo sốc và lan rộng.','Storytelling':'Kể chuyện từ trải nghiệm thật. Xây dựng kết nối lâu dài.','Listicle':'Liệt kê / Hướng dẫn từng bước. Dễ tiêu hoá, save nhiều.','Deep-dive':'Phân tích & Chiêm nghiệm chuyên sâu. Phù hợp YouTube và Podcast.','Hook Story':'Mở đầu bằng khoảnh khắc thật, kéo người nghe vào câu chuyện.','Hook Emotion':'Câu hỏi chạm đến cảm xúc người nghe ngay đầu podcast.','Hook Confession':'Thú nhận điều ít ai dám nói thẳng. Tạo tin tưởng ngay lập tức.'};
-const STYLE_HINTS={'Cinematic':'Điện ảnh, sang trọng. Ánh sáng kịch tính, màu sắc điện ảnh, chuyển động chậm và có chiều sâu.','Minimalist':'Tối giản, hiện đại. Không gian trắng, bố cục sạch, tập trung vào thông điệp.','Vlog':'Đời thường, chân thật. Handheld camera, gần gũi, tự nhiên như đang trò chuyện.','Authority':'Chuyên gia, thuyết phục. Studio setup, talking head, professional và đáng tin cậy.','Viral':'Nhanh, bắt mắt. Fast cuts, text overlay, trending sound, tối ưu TikTok/Reels.','Healing':'Cảm xúc, chữa lành, ấm áp. Ánh vàng, bokeh, chuyển động nhẹ nhàng.','Visual Podcast':'Tối giản, có hình ảnh hỗ trợ. Microphone setup, b-roll, tông màu moodboard.'};
-
-let currentMode='business', lang='vi', openCS=null;
-let currentUser=null;
-let saved=[];
-const $=id=>document.getElementById(id);
-
-// ===== AUTH =====
-function switchForm(f){
-  $('form-login').style.display=f==='login'?'block':'none';
-  $('form-register').style.display=f==='register'?'block':'none';
-  $('auth-error').style.display='none';
-  $('auth-msg').style.display='none';
-}
-function showAuthError(msg){const e=$('auth-error');e.textContent=msg;e.style.display='block';}
-function showAuthMsg(msg){const e=$('auth-msg');e.textContent=msg;e.style.display='block';}
-
-async function doLogin(){
-  const email=$('login-email').value.trim();
-  const pass=$('login-password').value;
-  if(!email||!pass){showAuthError('Vui lòng nhập email và mật khẩu');return;}
-  $('btn-login').disabled=true;$('btn-login').textContent='Đang đăng nhập...';
-  const {error}=await sb.auth.signInWithPassword({email,password:pass});
-  $('btn-login').disabled=false;$('btn-login').textContent='Đăng nhập';
-  if(error)showAuthError(error.message==='Invalid login credentials'?'Email hoặc mật khẩu không đúng':error.message);
-}
-
-async function doRegister(){
-  const name=$('reg-name').value.trim();
-  const email=$('reg-email').value.trim();
-  const pass=$('reg-password').value;
-  if(!name||!email||!pass){showAuthError('Vui lòng điền đầy đủ thông tin');return;}
-  if(pass.length<6){showAuthError('Mật khẩu tối thiểu 6 ký tự');return;}
-  $('btn-register').disabled=true;$('btn-register').textContent='Đang tạo...';
-  const {error}=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
-  $('btn-register').disabled=false;$('btn-register').textContent='Tạo tài khoản';
-  if(error)showAuthError(error.message);
-  else showAuthMsg('Tài khoản đã tạo! Kiểm tra email để xác nhận (nếu bật), hoặc đăng nhập ngay.');
-}
-
-async function doLogout(){
-  await sb.auth.signOut();
-}
-
-sb.auth.onAuthStateChange((event,session)=>{
-  if(session?.user){
-    currentUser=session.user;
-    showApp(session.user);
-  } else {
-    currentUser=null;
-    $('auth-screen').style.display='flex';
-    $('app').classList.remove('show');
-  }
-});
-
-function showApp(user){
-  $('auth-screen').style.display='none';
-  $('app').classList.add('show');
-  const name=user.user_metadata?.full_name||user.email;
-  const initials=name.charAt(0).toUpperCase();
-  $('user-avatar').textContent=initials;
-  $('user-email').textContent=name;
-  renderAll();
-  loadSaved();
-}
-
-// ===== SUPABASE SAVED PROMPTS =====
-async function loadSaved(){
-  if(!currentUser)return;
-  $('saved-list').innerHTML='<div class="loading-state">Đang tải prompt...</div>';
-  const {data,error}=await sb.from('prompts').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
-  if(error){$('saved-list').innerHTML='<div class="empty-state">Lỗi tải dữ liệu.<br>'+error.message+'</div>';return;}
-  saved=data||[];
-  renderSaved();
-}
-
-async function saveP(i,type,goal,topic,formula){
-  const text=(window._prompts||[])[i]||'';if(!text||!currentUser)return;
-  const dur=getCSVal('cs-duration')||'';
-  const ind=$('saving-indicator');ind.classList.add('show');
-  const record={user_id:currentUser.id,type,goal,topic,formula,dur,text,created_at:new Date().toISOString()};
-  const {data,error}=await sb.from('prompts').insert([record]).select().single();
-  ind.classList.remove('show');
-  if(error){alert('Lỗi lưu: '+error.message);return;}
-  saved.unshift(data);
-  renderSaved();
-}
-
-async function delSaved(id){
-  if(!confirm('Xoá prompt này?'))return;
-  const {error}=await sb.from('prompts').delete().eq('id',id).eq('user_id',currentUser.id);
-  if(error){alert('Lỗi xoá: '+error.message);return;}
-  saved=saved.filter(x=>x.id!==id);
-  renderSaved();
-}
-
-async function copySaved(id){
-  const s=saved.find(x=>x.id===id);if(!s)return;
-  try{await navigator.clipboard.writeText(s.text);}catch(e){}
-}
-
-function renderSaved(){
-  const el=$('saved-list');
-  const cnt=$('saved-count');
-  if(cnt)cnt.textContent=saved.length?saved.length+' prompt của bạn':'';
-  if(!saved.length){el.innerHTML='<div class="empty-state">Chưa có prompt nào.<br>Nhấn 💾 sau khi xuất để lưu.</div>';return;}
-  el.innerHTML=saved.map(s=>`<div class="saved-item">
-    <div class="saved-item-meta">
-      <div class="saved-item-title">${s.type} — ${s.topic||'—'}</div>
-      <div class="saved-item-tags">
-        ${s.goal?`<span class="mini-tag">${s.goal}</span>`:''}
-        ${s.formula?`<span class="mini-tag">${s.formula}</span>`:''}
-        ${s.dur?`<span class="mini-tag">⏱ ${s.dur}</span>`:''}
-        <span class="mini-tag" style="color:var(--muted);border-color:var(--border)">${new Date(s.created_at).toLocaleDateString('vi-VN')}</span>
-      </div>
-    </div>
-    <div class="saved-item-actions">
-      <button class="icon-btn" onclick="copySaved('${s.id}')" title="Copy">📋</button>
-      <button class="icon-btn del" onclick="delSaved('${s.id}')" title="Xoá">✕</button>
-    </div>
-  </div>`).join('');
-}
-
-// ===== TAB NAV =====
-function goTab(n){
-  document.querySelectorAll('.tab-pane').forEach(p=>{p.classList.remove('active');p.style.display='none'});
-  const pane=$('pane-'+n);pane.classList.add('active');pane.style.display='flex';
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.tab)===n));
-  $('progress-fill').style.width=(n===0?0:Math.round(n/10*100))+'%';
-}
-function setLang(l){lang=l;$('lang-vi').classList.toggle('active',l==='vi');$('lang-en').classList.toggle('active',l==='en');}
-function setMode(mode){
-  currentMode=mode;
-  $('mode-biz').classList.toggle('active',mode==='business');
-  $('mode-pod').classList.toggle('active',mode==='podcast');
-  $('sum-mode').textContent=mode==='business'?'Kinh doanh':'Podcast';
-  renderAll();
-}
-
-// ===== CUSTOM SELECT =====
-function toggleCS(id){
-  const wrap=$(id),trigger=wrap.querySelector('.cs-trigger'),drop=wrap.querySelector('.cs-dropdown');
-  const wasOpen=drop.classList.contains('open');
-  closeAllCS();
-  if(!wasOpen){trigger.classList.add('open');drop.classList.add('open');openCS=id;}
-}
-function closeAllCS(){document.querySelectorAll('.cs-trigger').forEach(t=>t.classList.remove('open'));document.querySelectorAll('.cs-dropdown').forEach(d=>d.classList.remove('open'));openCS=null;}
-document.addEventListener('click',e=>{if(!e.target.closest('.custom-select'))closeAllCS();});
-function buildCS(csId,items,valId,onSelect){
-  const drop=$(csId+'-drop');if(!drop)return;
-  drop.innerHTML='';
-  items.forEach(item=>{
-    const opt=document.createElement('div');opt.className='cs-option';opt.textContent=item;opt.dataset.value=item;
-    opt.onclick=()=>{drop.querySelectorAll('.cs-option').forEach(o=>o.classList.remove('selected'));opt.classList.add('selected');const v=$(valId);v.textContent=item;v.classList.remove('placeholder');closeAllCS();if(onSelect)onSelect(item);updateSummary();};
-    drop.appendChild(opt);
-  });
-}
-function toggleBadge(el,cls){const classes=['sel-y','sel-g','sel-r','sel-b'];const isOn=classes.some(c=>el.classList.contains(c));classes.forEach(c=>el.classList.remove(c));if(!isOn)el.classList.add(cls);updateSummary();}
-function getSelectedBadges(cid){return Array.from($(cid).querySelectorAll('.sel-y,.sel-g,.sel-r,.sel-b')).map(e=>e.textContent);}
-function getCSVal(id){const e=$(id+'-val');return e&&!e.classList.contains('placeholder')?e.textContent:'';}
-
-function renderAll(){
-  const d=DATA[currentMode];
-  buildCS('cs-goal',d.goals,'cs-goal-val',null);
-  buildCS('cs-topic',Object.keys(d.topics),'cs-topic-val',topic=>{
-    buildCS('cs-niche',d.topics[topic]||[],'cs-niche-val',null);
-    $('cs-niche-val').textContent='— Chọn ngách —';$('cs-niche-val').classList.add('placeholder');
-  });
-  buildCS('cs-formula',d.formulas,'cs-formula-val',val=>{$('formula-hint').innerHTML='<div class="hint-title">'+val+'</div><div class="hint-body">'+(FORMULA_HINTS[val]||'')+'</div>';});
-  buildCS('cs-style',d.styles,'cs-style-val',val=>{$('style-hint').innerHTML='<div class="hint-title">'+val+'</div><div class="hint-body">'+(STYLE_HINTS[val]||'')+'</div>';});
-  const dl=DURATION[currentMode]||[];
-  buildCS('cs-duration',dl.map(x=>x.label),'cs-duration-val',val=>{
-    const mode=currentMode;const list=DURATION[mode]||[];const d2=list.find(x=>x.label===val);
-    const hint=$('duration-hint');const te=$('dur-hint-title');const be=$('dur-hint-body');
-    if(d2&&hint&&te&&be){hint.style.display='block';te.textContent=val+' — ~'+d2.words.toLocaleString()+' từ';be.innerHTML=d2.note+(mode==='podcast'?'<br><br><span style="color:var(--accent2);font-size:11px">⚠️ Chỉ tính từ được NÓI ra, không mô tả kỹ thuật.</span>':'');}
-    updateSummary();
-  });
-  const convEl=$('badges-conversion');convEl.innerHTML='';
-  CONVERSION[currentMode].forEach(o=>{const b=document.createElement('span');b.className='mbadge';b.textContent=o;b.onclick=()=>toggleBadge(b,'sel-y');convEl.appendChild(b);});
-  const outEl=$('badges-output');outEl.innerHTML='';
-  d.outputs.forEach(o=>{const b=document.createElement('span');b.className='mbadge';b.textContent=o;b.onclick=()=>toggleBadge(b,'sel-r');outEl.appendChild(b);});
-  ['cs-goal-val','cs-topic-val','cs-niche-val','cs-formula-val','cs-style-val','cs-duration-val'].forEach(id=>{const e=$(id);if(e)e.classList.add('placeholder');});
-  $('cs-goal-val').textContent='— Chọn mục tiêu —';$('cs-topic-val').textContent='— Chọn chủ đề —';
-  $('cs-niche-val').textContent='— Chọn chủ đề trước —';$('cs-formula-val').textContent='— Chọn công thức —';
-  $('cs-style-val').textContent='— Chọn phong cách —';$('cs-duration-val').textContent='— Chọn thời lượng —';
-  const dh=$('duration-hint');if(dh)dh.style.display='none';
-  updateSummary();
-}
-
-function updateSummary(){
-  const set=(id,val)=>{const e=$(id);if(!e)return;e.textContent=val||'—';e.className=val?'sum-val':'sum-empty';};
-  set('sum-goal',getCSVal('cs-goal'));set('sum-topic',getCSVal('cs-topic'));set('sum-formula',getCSVal('cs-formula'));
-  const dur=getCSVal('cs-duration');const dl=DURATION[currentMode]||[];const durObj=dur?dl.find(d=>d&&d.label===dur)||null:null;
-  set('sum-duration',durObj?dur+' (~'+durObj.words.toLocaleString()+' từ)':'');
-}
-
-function generateNichePrompt(){
-  const idea=$('txt-idea').value.trim(),goal=getCSVal('cs-goal'),topic=getCSVal('cs-topic');
-  const ml=currentMode==='business'?'Kinh doanh':'Podcast';
-  const prompt=`Bạn là chuyên gia chiến lược nội dung ${ml}.
-
-Dựa trên:
-💡 Ý TƯỞNG: ${idea||'(Chưa nhập)'}
-🎯 MỤC TIÊU: ${goal||'(Chưa chọn)'}
-📌 CHỦ ĐỀ: ${topic||'(Chưa chọn)'}
-
-Đề xuất 5–8 NGÁCH NỘI DUNG cụ thể:
-[STT]. [Tên ngách]
-→ Lý do: ...
-→ Hook: "..."`;
-  const box=$('niche-prompt-box');box.style.display='block';$('niche-prompt-text').innerHTML=syntaxHL(prompt);window._nichePrompt=prompt;
-}
-async function copyNichePrompt(btn){const t=window._nichePrompt||'';try{await navigator.clipboard.writeText(t);}catch(e){}btn.textContent='✅';setTimeout(()=>{btn.textContent='Copy';},2000);}
-
-function generatePrompts(){
-  const idea=$('txt-idea').value.trim(),goal=getCSVal('cs-goal'),topic=getCSVal('cs-topic');
-  const niche=$('txt-niche-result').value.trim()||getCSVal('cs-niche');
-  const formula=getCSVal('cs-formula'),style=getCSVal('cs-style');
-  const outputs=getSelectedBadges('badges-output'),platforms=getSelectedBadges('badges-platform');
-  const moods=getSelectedBadges('badges-mood'),substyles=getSelectedBadges('badges-substyle'),colors=getSelectedBadges('badges-color');
-  const extra=$('txt-extra').value.trim(),special=$('txt-special').value.trim();
-  const ml=currentMode==='business'?'Kinh doanh':'Podcast';
-  const ll=lang==='vi'?'Tiếng Việt':'English';
-  const pStr=platforms.length?platforms.join(', '):'TikTok';
-  const dl=DURATION[currentMode]||[];const dur=getCSVal('cs-duration');
-  const durObj=dur?dl.find(d=>d&&d.label===dur)||null:null;
-  const isPodcastAudio=currentMode==='podcast'&&(platforms.includes('Spotify')||outputs.some(o=>o.includes('Podcast')));
-  const wAll=outputs.length===0;
-  const wS=wAll||outputs.some(o=>o.includes('Kịch bản')||o.includes('Dàn ý')||o.includes('Bộ câu'));
-  const wSB=wAll||outputs.some(o=>o.includes('Storyboard'));
-  const wI=wAll||outputs.some(o=>o.includes('ảnh'));
-  const wV=wAll||outputs.some(o=>o.includes('video AI')||o.includes('Prompt video'));
-  const prompts=[];
-  if(wS)prompts.push({type:'Kịch bản / Script',tc:'',icon:'📝',text:buildScript(ml,idea,goal,topic,niche,formula,pStr,style,ll,extra,special,moods,substyles,colors,durObj,isPodcastAudio)});
-  if(wSB)prompts.push({type:'Storyboard phân cảnh',tc:'green',icon:'🎬',text:buildSB(ml,niche||topic,formula,style,ll,extra,moods,substyles,colors)});
-  if(wI)prompts.push({type:'Prompt ảnh AI',tc:'red',icon:'🖼',text:buildImg(style,niche||topic,extra,moods,colors)});
-  if(wV)prompts.push({type:'Prompt video AI',tc:'red',icon:'🎥',text:buildVid(style,niche||topic,pStr,extra,moods,substyles,colors)});
-  const grid=$('output-grid');grid.innerHTML='';
-  prompts.forEach((p,i)=>{
-    const c=document.createElement('div');c.className='output-card'+(i===0?' full':'');c.style.animationDelay=(i*0.07)+'s';
-    c.innerHTML=`<div class="card-type ${p.tc}"><span class="card-type-icon">${p.icon}</span>${p.type}</div><div class="prompt-text">${syntaxHL(p.text)}</div><div class="card-actions"><button class="action-btn" onclick="copyP(${i},this)">📋 Copy</button><button class="action-btn" onclick="saveP(${i},'${esc(p.type)}','${esc(goal)}','${esc(topic)}','${esc(formula)}')">☁️ Lưu Supabase</button></div>`;
-    grid.appendChild(c);
-  });
-  window._prompts=prompts.map(p=>p.text);
-  $('output-area').style.display='block';
-  $('output-area').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function buildScript(mode,idea,goal,topic,niche,formula,platform,style,lang,extra,special,moods,substyles,colors,durObj,isPodcastAudio){
-  const moodLine=moods&&moods.length?'\n🎭 MOOD / CẢM XÚC: '+moods.join(', '):'';
-  const subLine=substyles&&substyles.length?'\n🎬 PHONG CÁCH PHỤ: '+substyles.join(', '):'';
-  const colorLine=colors&&colors.length?'\n🎨 TÔNG MÀU CẢM XÚC: '+colors.join(', '):'';
-  const isShort=platform.includes('TikTok')||platform.includes('Shorts')||platform.includes('Reels');
-
-  let durLine='';
-  let wordReq='';
-  if(durObj){
-    durLine='\n⏱ THỜI LƯỢNG MỤC TIÊU: '+durObj.label;
-    if(isPodcastAudio){
-      wordReq=`\n\nYÊU CẦU ĐỘ DÀI — PODCAST AUDIO THUẦN:\n- Mục tiêu: ${durObj.label} khi phát sóng\n- Số từ cần viết: ĐÚNG ${durObj.words.toLocaleString()} từ thuần thoại\n- CHỈ viết lời NÓI — không mô tả hành động, góc máy, bối cảnh, chỉ dẫn sản xuất\n- Không viết [pause], [nhạc nền], [tiếng động] vào phần thoại\n- Tốc độ nói thực tế: ~190 từ/phút — ${(durObj&&durObj.words||0).toLocaleString()} từ = ${durObj&&durObj.label||''} thực tế\n- Nếu cần dài hơn, hãy mở rộng nội dung thay vì thêm chỉ dẫn kỹ thuật`;
-    } else {
-      wordReq=`\n\nYÊU CẦU ĐỘ DÀI:\n- Thời lượng mục tiêu: ${durObj.label}\n- Số từ thoại: ~${durObj.words.toLocaleString()} từ${isShort?' (bao gồm text on screen)':''}\n- Tốc độ nói thực tế: ~190 từ/phút`;
-    }
-  } else {
-    wordReq='\n- Độ dài: '+(isShort?'15–60 giây (~65–130 từ thoại)':'3–10 phút (~390–1,300 từ thoại)');
-  }
-
-  // ── PODCAST AUDIO: DNA Phương Thảo v2.0 ─────────────────────────────
-  if(isPodcastAudio){
-    const xung=(moods&&moods.some(m=>m.includes('Chữa lành')||m.includes('Sâu lắng')||m.includes('Ấm áp')))?'mình':'tui';
-    const colorTone=colors&&colors.length?colors.join(', '):'ấm áp, tự nhiên';
-    const moodTone=moods&&moods.length?moods.join(' + '):'chân thật, gần gũi';
-    const topicMain=niche||topic||'cuộc sống đời thường';
-    return `Bạn là Phương Thảo — chuyên viết kịch bản podcast solo đời thường, giọng miền Nam/Sài Gòn: hiền, thân thiện, hơi tếu nhẹ, như đang ngồi nói chuyện thật với một người bạn khi bật mic.
-
-THÔNG SỐ TẬP NÀY:
-💡 Ý tưởng gốc: ${idea||topicMain}
-🎯 Mục tiêu cảm xúc: ${goal||'Chữa lành & Đồng hành'}
-📌 Chủ đề / Ngách: ${topicMain}
-📐 Công thức: ${formula||'Storytelling'}
-🎭 Mood xuyên suốt: ${moodTone}
-🎨 Tông màu cảm xúc: ${colorTone}
-🗣 Ngôn ngữ: ${lang}${extra?'\n🛍 Sản phẩm/Dịch vụ: '+extra:''}
-${wordReq}
-
-QUY TRÌNH NGẦM TRƯỚC KHI VIẾT (không in ra):
-1. Tạo 4–6 hook theo thứ tự ưu tiên: nỗi đau quen thuộc → nghịch lý đời sống → câu hỏi tò mò → triết lý ngắn.
-2. Đánh giá hook nào chạm cảm xúc người nghe nhất với chủ đề "${topicMain}".
-3. Chọn hook đó làm câu mở đầu, theo sau bằng 1–2 câu kéo người nghe tiếp tục.
-4. Nếu chủ đề trừu tượng: bắt buộc mở bằng một khoảnh khắc đời thường cụ thể trước.
-5. Xác định xưng "${xung}" và giữ 100% xuyên suốt, không đổi dù một lần.
-
-PHONG CÁCH GIỌNG NÓI:
-- Văn phong lời nói miền Nam đời thường: "thiệt ra", "nhiều khi", "nghe cũng hợp lý ha… mà…", "kiểu như", "ừ thì".
-- Câu ngắn, tự nhiên, đôi khi lặp ý nhẹ. Có đoạn giống như đang nghĩ thành lời.
-- Câu ngắn đứng một mình = nhấn mạnh cảm xúc. Dùng nhiều.
-- Dùng "..." khi ngập ngừng. Dùng "—" khi cắt ngang suy nghĩ.
-- TUYỆT ĐỐI không viết câu hoàn hảo, trơn tru — con người thật không nói vậy.
-
-ÂM THANH CẢM XÚC (4–7 lần/tập, đúng ngữ cảnh):
-- [thở dài] → sau câu thừa nhận điều khó nói.
-- [cười nhẹ] → sau câu tự trào hoặc nghịch lý nhỏ.
-- [cười khẽ] → khi chia sẻ điều hơi ngại nhưng thật.
-- [haha..] → khi kể chuyện dở khóc dở cười.
-- [ừm..] → khi chuyển sang ý chưa chắc hoặc đang tìm từ.
-
-CÂU HỎI NGƯỜI NGHE (đa dạng, không lặp mẫu):
-- Cảm xúc: "bạn có từng cảm giác đó không?"
-- Hành động: "bạn đã làm gì lúc đó?"
-- Tự nhìn lại: "thử nghĩ lại xem, lần cuối bạn thật sự… là hồi nào?"
-
-NHỊP BẮT BUỘC: Hook → kéo người nghe → chạm nỗi lo → chi tiết đời thường cụ thể → tự nghi ngờ/lật niềm tin cũ → câu nói thẳng đứng một mình → câu hỏi thật lòng → kết dịu hơn lúc mở.
-
-ĐỊNH DẠNG: Chỉ văn xuôi liền mạch. Không bullet, heading, markdown, emoji, [HOOK]/[BODY]/[CTA], không CTA kêu follow/like.${special?'\n\nYÊU CẦU ĐẶC BIỆT (ưu tiên cao nhất): '+special:''}`;
-  }
-
-  // ── KINH DOANH: tối ưu hook + CTA + tone gần gũi ────────────────────
-  if(mode==='Kinh doanh'){
-    const topicMain=niche||topic||'chủ đề liên quan';
-    const moodTone=moods&&moods.length?moods.join(' + '):'tự nhiên, thuyết phục';
-    const colorTone=colors&&colors.length?colors.join(', '):'phù hợp thương hiệu';
-
-    // Phân loại goal để chọn chiến lược hook & CTA phù hợp
-    const isSell=goal&&(goal.includes('Bán hàng')||goal.includes('doanh số')||goal.includes('giỏ hàng'));
-    const isCase=goal&&(goal.includes('Case study')||goal.includes('kết quả')||goal.includes('chứng minh'));
-    const isBrand=goal&&(goal.includes('thương hiệu')||goal.includes('Follow')||goal.includes('tương tác'));
-
-    const hookStrategy=isSell
-      ? `Hook nỗi đau + PAS: mở bằng vấn đề người xem đang gặp → khuếch đại → giới thiệu giải pháp là sản phẩm/dịch vụ`
-      : isCase
-      ? `Hook kết quả trước: mở bằng con số hoặc kết quả cụ thể → kể hành trình → chứng minh bằng bằng chứng thật`
-      : `Hook tò mò hoặc nghịch lý: câu mở khiến người xem dừng scroll và tự hỏi "tại sao vậy?"`
-
-    const ctaStrategy=isSell
-      ? `CTA bán hàng rõ ràng, tạo urgency: dùng giới hạn thời gian/số lượng, lợi ích cuối cùng, lời kêu gọi hành động một bước duy nhất (nhắn tin / bấm link / comment từ khoá).`
-      : isCase
-      ? `CTA mềm dẫn dắt: chia sẻ bài học → mời người xem nhắn tin nếu muốn kết quả tương tự → không ép mua ngay.`
-      : `CTA xây dựng cộng đồng: mời comment chia sẻ trải nghiệm → follow để xem thêm → câu hỏi tương tác cuối video.`
-
-    return `Bạn là chuyên gia content creator bán hàng và thương hiệu cá nhân — phong cách gần gũi, đời thường, thuyết phục tự nhiên, KHÔNG cứng nhắc như quảng cáo.
-
-THÔNG SỐ VIDEO:
-💡 Ý tưởng gốc: ${idea||topicMain}
-🎯 Mục tiêu: ${goal||'Tăng nhận diện thương hiệu'}
-📌 Chủ đề / Ngách: ${topicMain}
-📐 Công thức: ${formula||'PAS'}
-📱 Nền tảng: ${platform}
-🎨 Phong cách: ${style||'Viral'} — ${moodTone}${colorTone?'\n🌈 Tông màu: '+colorTone:''}${durLine}
-🗣 Ngôn ngữ: ${lang}${extra?'\n🛍 Sản phẩm/Dịch vụ: '+extra:''}
-${wordReq}
-
-QUY TRÌNH NGẦM TRƯỚC KHI VIẾT (không in ra):
-1. Xác định insight người xem: họ đang đau điểm gì? Họ muốn điều gì? Họ sợ điều gì?
-2. Tạo 3–4 hook theo hướng: "${hookStrategy}"
-3. Chọn hook chạm insight mạnh nhất, đặt làm câu đầu tiên — phải kéo người dừng scroll trong 3 giây.
-4. Sau hook: 1–2 câu giữ người xem bằng cách hứa hẹn giá trị hoặc tạo tò mò tiếp theo.
-
-PHONG CÁCH GIỌNG NÓI:
-- Gần gũi, đời thường, như người bạn đang chia sẻ — không đọc quảng cáo.
-- Câu ngắn xen câu dài để tạo nhịp tự nhiên.
-- Có đoạn nói thẳng vào vấn đề không vòng vo.
-- Dùng "bạn" xuyên suốt để tạo kết nối trực tiếp với người xem.
-- Tránh từ ngữ sáo rỗng: "tuyệt vời", "đỉnh cao", "siêu phẩm".
-- Số liệu / bằng chứng cụ thể > lời khen chung chung.
-
-NHỊP TRIỂN KHAI [HOOK → BODY → CTA]:
-[HOOK] Câu mở 3 giây — chạm đúng nỗi đau hoặc tạo tò mò mạnh. Đứng một mình, không giải thích ngay.
-[BODY] Triển khai theo công thức ${formula||'PAS'}: dẫn dắt tự nhiên, có chi tiết đời thường cụ thể, có bằng chứng/ví dụ thật, có đoạn người xem tự nhận ra vấn đề của họ.
-[CTA] ${ctaStrategy}
-
-YÊU CẦU BẮT BUỘC:
-- Hook KHÔNG được bắt đầu bằng "Xin chào", "Hôm nay mình sẽ", "Bạn có biết không".
-- Body KHÔNG được liệt kê tính năng — phải chuyển tính năng thành lợi ích cảm xúc.
-- CTA phải có 1 hành động duy nhất, rõ ràng — không liệt kê 3–4 việc cùng lúc.
-- Phong cách quay/dựng: ${substyles&&substyles.length?substyles.join(', '):'linh hoạt theo nền tảng'}${special?'\n\nYÊU CẦU ĐẶC BIỆT (ưu tiên cao nhất): '+special:''}`;
-  }
-
-  // ── PODCAST (không phải audio thuần): giữ logic cũ nhẹ ──────────────
-  return `Bạn là chuyên gia content creator podcast và cảm xúc.
-
-Hãy tạo kịch bản podcast hoàn chỉnh:
-${idea?'\n💡 Ý TƯỞNG GỐC: '+idea:''}
-📌 MỤC TIÊU: ${goal||'Truyền cảm hứng'}
-📌 CHỦ ĐỀ: ${topic||'Không giới hạn'}
-📌 NGÁCH: ${niche||topic||'Tự chọn phù hợp'}
-📌 CÔNG THỨC: ${formula||'Storytelling'}
-📌 NỀN TẢNG: ${platform}
-📌 PHONG CÁCH CHÍNH: ${style||'Healing'}${moodLine}${subLine}${colorLine}${durLine}
-📌 NGÔN NGỮ: ${lang}${extra?'\n- Sản phẩm: '+extra:''}${special?'\n- Yêu cầu đặc biệt: '+special:''}
-${wordReq}
-
-YÊU CẦU THÊM:
-- Hook mạnh trong 3 giây đầu, toát ra mood: ${moods&&moods.length?moods[0]:'phù hợp với chủ đề'}
-- Áp dụng đúng công thức ${formula||'Storytelling'} từ đầu đến cuối
-- Tone & cảm xúc xuyên suốt: ${moods&&moods.length?moods.join(' + '):'tự nhiên, phù hợp'}
-- CTA rõ ràng ở cuối
-
-Xuất kịch bản đầy đủ, đánh dấu [HOOK], [BODY], [CTA].`;
-}
-
-function buildSB(mode,topic,formula,style,lang,extra,moods,substyles,colors){
-  const moodLine=moods&&moods.length?'\n- Mood: '+moods.join(', '):'';
-  const subLine=substyles&&substyles.length?'\n- Phong cách phụ: '+substyles.join(', '):'';
-  const colorLine=colors&&colors.length?'\n- Tông màu cảm xúc: '+colors.join(', '):'';
-  return `Tạo storyboard phân cảnh chi tiết cho video ${mode}: "${topic}".${extra?'\nSản phẩm: '+extra:''}
-
-THÔNG SỐ:
-- Công thức: ${formula||'Hook Pain + PAS'}
-- Phong cách chính: ${style||'Cinematic'}${moodLine}${subLine}${colorLine}
-- Ngôn ngữ: ${lang}
-
-ĐỊNH DẠNG MỖI CẢNH:
-[CẢNH X — 0:00–0:05]
-📍 Bối cảnh: ...
-🎥 Góc máy & phong cách quay: ...
-🎭 Hành động / cảm xúc diễn viên: ...
-💬 Lời thoại/VO: ...
-🎵 Âm thanh / Nhạc nền: ...
-🎨 Tông màu cảm xúc / Ánh sáng: ...
-✨ Text on screen: ...
-
-Tạo 6–8 cảnh, đánh dấu HOOK / BODY / TRANSITION / CTA. Đảm bảo mood "${moods&&moods.length?moods[0]:'phù hợp'}" xuyên suốt toàn bộ.`;
-}
-
-function buildImg(style,topic,extra,moods,colors){
-  const sm={'Cinematic':'cinematic photography, dramatic lighting, film grain, 4K','Minimalist':'clean minimalist, white space, editorial, soft light','Vlog':'authentic lifestyle, candid, warm tones, natural light','Authority':'professional portrait, studio lighting, sharp focus','Viral':'bold colors, high contrast, dynamic angle, scroll-stopping','Healing':'soft warm tones, golden hour, bokeh, peaceful','Visual Podcast':'podcast studio, microphone, moody lighting, cinematic'};
-  const s=sm[style]||'cinematic, professional';
-  const tc=topic.replace(/['"]/g,'');
-  const ex=extra?', featuring: '+extra:'';
-  const moodStr=moods&&moods.length?', mood: '+moods.join(' + '):'';
-  const colorStr=colors&&colors.length?', color palette: '+colors.join(', '):'';
-  return `[AI IMAGE PROMPT — Thumbnail / Minh họa]
-
-${s}${moodStr}${colorStr}, Vietnamese content creator, topic: "${tc}"${ex}, social media thumbnail, scroll-stopping, --ar 9:16 --q 2 --style raw
-
----
-[Midjourney / DALL-E / Flux]
-A ${s.split(',')[0]} photo, Vietnamese ${style==='Authority'?'expert':'creator'} presenting "${tc}"${ex}. ${moods&&moods.length?'Emotional tone: '+moods.join(', ')+'.':''} ${colors&&colors.length?'Color grade: '+colors.join(', ')+'.':''} Professional, photorealistic, social media ready.`;
-}
-
-function buildVid(style,topic,platform,extra,moods,substyles,colors){
-  const sm={'Cinematic':'cinematic slow zoom, depth of field, film look','Viral':'fast cuts, dynamic transitions, bold text overlays','Vlog':'handheld, natural movement, warm color grade','Healing':'slow gentle motion, soft bokeh, calming pans','Authority':'steady shot, talking head, clean background'};
-  const m=sm[style]||'smooth professional movement';
-  const isShort=platform.includes('TikTok')||platform.includes('Shorts')||platform.includes('Reels');
-  const moodStr=moods&&moods.length?'\n- Mood / Cảm xúc: '+moods.join(', '):'';
-  const subStr=substyles&&substyles.length?'\n- Phong cách quay: '+substyles.join(', '):'';
-  const colorStr=colors&&colors.length?'\n- Tông màu: '+colors.join(', '):'';
-  return `[AI VIDEO PROMPT — Kling / Runway / Sora / Veo]
-
-${m}, Vietnamese ${style==='Authority'?'expert':'content creator'}, topic: "${topic.replace(/['"]/g,'')}"${extra?', featuring: '+extra:''}.
-
-Specs:
-- Duration: ${isShort?'15–30 seconds, vertical 9:16':'60–90 seconds, 16:9'}
-- Style: ${style||'Cinematic'}, ${m}${moodStr}${subStr}${colorStr}
-- Lighting: ${style==='Healing'?'golden hour, soft diffused':style==='Cinematic'?'dramatic rembrandt':'natural bright ambient'}
-- Camera: ${isShort?'vertical, close-up talking head, stabilized':'wide establishing + medium closeup'}
-- Tông màu cảm xúc: ${colors&&colors.length?colors[0]:style==='Healing'?'warm peach, low contrast':style==='Viral'?'high saturation, punchy':'natural filmic'}
-- Platform: ${platform} optimized`;
-}
-
-function syntaxHL(text){
-  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\[([^\]]+)\]/g,'<span class="hl-yellow">[$1]</span>')
-    .replace(/(📌|📍|🎥|🎭|💬|🎵|✨|💡|🎯|🔵)/g,'<span class="hl-green">$1</span>')
-    .replace(/\b(HOOK|BODY|CTA|TRANSITION)\b/g,'<span class="hl-red">$1</span>');
-}
-
-function esc(s){return(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
-async function copyP(i,btn){
-  const t=(window._prompts||[])[i]||'';
-  try{await navigator.clipboard.writeText(t);}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
-  btn.textContent='✅ Copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='📋 Copy';btn.classList.remove('copied');},2000);
-}
-
-// init — check session
-sb.auth.getSession().then(({data:{session}})=>{
-  if(session?.user)showApp(session.user);
-  else{$('auth-screen').style.display='flex';}
-});
-
-// sync bottom nav active state with goTab
-const _origGoTab = goTab;
-function goTab(n){
-  _origGoTab(n);
-  document.querySelectorAll('.mobile-bottom-nav .tab-btn').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.tab)===n);
-  });
-}
-
-// enter key on login
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){
-    if($('form-login').style.display!=='none')doLogin();
-    else if($('form-register').style.display!=='none')doRegister();
-  }
-});
-</script>
 <!-- MOBILE BOTTOM NAV -->
 <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
-  <button class="tab-btn active" data-tab="0" onclick="goTab(0)" title="Thiết lập"><span class="tab-ico">⚙</span><span class="tab-num">0</span></button>
-  <button class="tab-btn" data-tab="1" onclick="goTab(1)" title="Ý tưởng"><span class="tab-ico">💡</span><span class="tab-num">1</span></button>
-  <button class="tab-btn" data-tab="2" onclick="goTab(2)" title="Mục tiêu"><span class="tab-ico">🎯</span><span class="tab-num">2</span></button>
-  <button class="tab-btn" data-tab="3" onclick="goTab(3)" title="Chủ đề"><span class="tab-ico">📌</span><span class="tab-num">3</span></button>
-  <button class="tab-btn" data-tab="4" onclick="goTab(4)" title="Ngách"><span class="tab-ico">🔍</span><span class="tab-num">4</span></button>
-  <button class="tab-btn" data-tab="5" onclick="goTab(5)" title="Công thức"><span class="tab-ico">⚗</span><span class="tab-num">5</span></button>
-  <button class="tab-btn" data-tab="6" onclick="goTab(6)" title="Đầu ra"><span class="tab-ico">📤</span><span class="tab-num">6</span></button>
-  <button class="tab-btn" data-tab="7" onclick="goTab(7)" title="Nền tảng"><span class="tab-ico">📱</span><span class="tab-num">7</span></button>
-  <button class="tab-btn" data-tab="8" onclick="goTab(8)" title="Phong cách"><span class="tab-ico">🎨</span><span class="tab-num">8</span></button>
-  <button class="tab-btn" data-tab="9" onclick="goTab(9)" title="Sản phẩm"><span class="tab-ico">🛍</span><span class="tab-num">9</span></button>
-  <button class="tab-btn" data-tab="10" onclick="goTab(10)" title="Mood"><span class="tab-ico">🎭</span><span class="tab-num">10</span></button>
+  <button class="tab-btn active" data-tab="0"  onclick="goTab(0)"  title="Thiết lập"><span class="tab-ico">⚙</span><span class="tab-num">0</span></button>
+  <button class="tab-btn"        data-tab="1"  onclick="goTab(1)"  title="Ý tưởng"><span class="tab-ico">💡</span><span class="tab-num">1</span></button>
+  <button class="tab-btn"        data-tab="2"  onclick="goTab(2)"  title="Mục tiêu"><span class="tab-ico">🎯</span><span class="tab-num">2</span></button>
+  <button class="tab-btn"        data-tab="3"  onclick="goTab(3)"  title="Chủ đề"><span class="tab-ico">📌</span><span class="tab-num">3</span></button>
+  <button class="tab-btn"        data-tab="4"  onclick="goTab(4)"  title="Ngách"><span class="tab-ico">🔍</span><span class="tab-num">4</span></button>
+  <button class="tab-btn"        data-tab="5"  onclick="goTab(5)"  title="Công thức"><span class="tab-ico">⚗</span><span class="tab-num">5</span></button>
+  <button class="tab-btn"        data-tab="6"  onclick="goTab(6)"  title="Đầu ra"><span class="tab-ico">📤</span><span class="tab-num">6</span></button>
+  <button class="tab-btn"        data-tab="7"  onclick="goTab(7)"  title="Nền tảng"><span class="tab-ico">📱</span><span class="tab-num">7</span></button>
+  <button class="tab-btn"        data-tab="8"  onclick="goTab(8)"  title="Phong cách"><span class="tab-ico">🎨</span><span class="tab-num">8</span></button>
+  <button class="tab-btn"        data-tab="9"  onclick="goTab(9)"  title="Sản phẩm"><span class="tab-ico">🛍</span><span class="tab-num">9</span></button>
+  <button class="tab-btn"        data-tab="10" onclick="goTab(10)" title="Mood"><span class="tab-ico">🎭</span><span class="tab-num">10</span></button>
 </nav>
+
+<!-- JS — thứ tự quan trọng: data trước, prompts sau, app cuối -->
+<script src="data.js"></script>
+<script src="prompts.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
