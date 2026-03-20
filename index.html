@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MUZI STUDIO — Supabase</title>
+<title>MUZI STUDIO</title>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -176,6 +176,159 @@ textarea::placeholder{color:var(--muted)}
 .saving-indicator.show{display:flex}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:10px;height:10px;border:1.5px solid rgba(95,255,176,.3);border-top-color:var(--accent3);border-radius:50%;animation:spin .6s linear infinite}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet: ≤ 900px — ẩn tab rail, thu step panel */
+@media(max-width:900px){
+  .app.show{grid-template-columns:0 260px 1fr}
+  .tab-rail{display:none}
+  .step-panel{border-right:1px solid var(--border)}
+  .main{padding:20px 20px}
+  .main-title{font-size:28px}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .output-grid{grid-template-columns:1fr}
+  .output-card.full{grid-column:1}
+}
+
+/* Mobile: ≤ 640px — layout dọc hoàn toàn */
+@media(max-width:640px){
+  /* App chuyển sang layout dọc */
+  .app.show{
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+
+  /* Top bar gọn hơn */
+  .top-bar{
+    padding:0 14px;
+    height:48px;
+    grid-column:unset;
+    position:sticky;
+    top:0;
+    z-index:100;
+  }
+  .top-bar-logo{font-size:12px}
+  .storage-badge{display:none}
+  .saving-indicator{display:none!important}
+  .user-email{display:none}
+  .logout-btn{padding:4px 9px;font-size:10px}
+
+  /* Tab rail ẩn hoàn toàn, thay bằng bottom nav */
+  .tab-rail{display:none}
+
+  /* Step panel full width, chiều cao tự động */
+  .step-panel{
+    position:relative;
+    top:0;
+    height:auto;
+    width:100%;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+    max-height:70vh;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .tab-pane{
+    height:auto;
+    max-height:calc(70vh - 48px);
+  }
+
+  .panel-body{
+    padding:12px 16px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .panel-header{padding:14px 16px 10px}
+  .panel-nav{padding:10px 16px}
+  .generate-btn{margin:0 16px 14px;padding:12px;font-size:13px}
+
+  /* Main area */
+  .main{
+    padding:16px;
+    gap:14px;
+    overflow-y:visible;
+  }
+  .main-title{font-size:24px}
+  .main-sub{font-size:12px;max-width:100%}
+
+  /* Summary strip cuộn ngang */
+  .summary-strip{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:10px 14px;
+    gap:8px;
+    scrollbar-width:none;
+  }
+  .summary-strip::-webkit-scrollbar{display:none}
+  .sum-dot{flex-shrink:0}
+  .sum-item{flex-shrink:0}
+
+  /* Steps hướng dẫn: 1 cột */
+  .steps{grid-template-columns:1fr;gap:8px}
+
+  /* Output cards: 1 cột */
+  .output-grid{grid-template-columns:1fr;gap:10px}
+  .output-card.full{grid-column:1}
+  .output-card{padding:14px}
+
+  /* Saved section */
+  .saved-section{padding:14px}
+
+  /* Multi badges cuộn ngang */
+  .multi-badges{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:4px;
+    scrollbar-width:none;
+  }
+  .multi-badges::-webkit-scrollbar{display:none}
+  .mbadge{flex-shrink:0}
+
+  /* Auth card padding nhỏ hơn */
+  .auth-card{padding:28px 20px}
+
+  /* Bottom nav bar cho mobile */
+  .mobile-bottom-nav{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:var(--bg2);
+    border-top:1px solid var(--border);
+    z-index:200;
+    padding:6px 4px;
+    gap:2px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .mobile-bottom-nav::-webkit-scrollbar{display:none}
+  .mobile-bottom-nav .tab-btn{
+    flex-shrink:0;
+    width:40px;
+    height:40px;
+    border-radius:8px;
+  }
+  .mobile-bottom-nav .tab-btn.active::after{
+    display:none;
+  }
+  /* Padding bù cho bottom nav */
+  .app.show{padding-bottom:60px}
+}
+
+/* Hiện bottom nav chỉ trên mobile */
+.mobile-bottom-nav{display:none}
+@media(max-width:640px){
+  .mobile-bottom-nav{display:flex}
+}
 </style>
 </head>
 <body>
@@ -405,7 +558,7 @@ textarea::placeholder{color:var(--muted)}
   <main class="main">
     <div>
       <div class="main-title">MUZI<br><em>STUDIO</em></div>
-      <div class="main-sub">Điền 10 bước → xuất prompt → copy vào ChatGPT / Kling / Midjourney.</div>
+      <div class="main-sub">Bạn không cần biết hết mọi thứ - chỉ cần biết click chuột.</div>
     </div>
     <div class="summary-strip">
       <div class="sum-item"><span class="sum-label">Mode</span>&nbsp;<span class="sum-val" id="sum-mode">Kinh doanh</span></div>
@@ -845,6 +998,15 @@ sb.auth.getSession().then(({data:{session}})=>{
   else{$('auth-screen').style.display='flex';}
 });
 
+// sync bottom nav active state with goTab
+const _origGoTab = goTab;
+function goTab(n){
+  _origGoTab(n);
+  document.querySelectorAll('.mobile-bottom-nav .tab-btn').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.tab)===n);
+  });
+}
+
 // enter key on login
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'){
@@ -853,5 +1015,20 @@ document.addEventListener('keydown',e=>{
   }
 });
 </script>
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+  <button class="tab-btn active" data-tab="0" onclick="goTab(0)" title="Thiết lập"><span class="tab-ico">⚙</span><span class="tab-num">0</span></button>
+  <button class="tab-btn" data-tab="1" onclick="goTab(1)" title="Ý tưởng"><span class="tab-ico">💡</span><span class="tab-num">1</span></button>
+  <button class="tab-btn" data-tab="2" onclick="goTab(2)" title="Mục tiêu"><span class="tab-ico">🎯</span><span class="tab-num">2</span></button>
+  <button class="tab-btn" data-tab="3" onclick="goTab(3)" title="Chủ đề"><span class="tab-ico">📌</span><span class="tab-num">3</span></button>
+  <button class="tab-btn" data-tab="4" onclick="goTab(4)" title="Ngách"><span class="tab-ico">🔍</span><span class="tab-num">4</span></button>
+  <button class="tab-btn" data-tab="5" onclick="goTab(5)" title="Công thức"><span class="tab-ico">⚗</span><span class="tab-num">5</span></button>
+  <button class="tab-btn" data-tab="6" onclick="goTab(6)" title="Đầu ra"><span class="tab-ico">📤</span><span class="tab-num">6</span></button>
+  <button class="tab-btn" data-tab="7" onclick="goTab(7)" title="Nền tảng"><span class="tab-ico">📱</span><span class="tab-num">7</span></button>
+  <button class="tab-btn" data-tab="8" onclick="goTab(8)" title="Phong cách"><span class="tab-ico">🎨</span><span class="tab-num">8</span></button>
+  <button class="tab-btn" data-tab="9" onclick="goTab(9)" title="Sản phẩm"><span class="tab-ico">🛍</span><span class="tab-num">9</span></button>
+  <button class="tab-btn" data-tab="10" onclick="goTab(10)" title="Mood"><span class="tab-ico">🎭</span><span class="tab-num">10</span></button>
+</nav>
+
 </body>
 </html>
