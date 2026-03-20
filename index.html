@@ -617,7 +617,7 @@ const DURATION={
     {label:'15 phút',key:'15m',words:1950,note:'~1,950 từ thoại. YouTube dài. Tutorial hoặc phân tích sâu.'}
   ],
   podcast:[
-    {label:'5 phút',key:'5m',words:650,note:'~650 từ thuần thoại (không mô tả hành động/không gian). Solo ngắn, 1 insight.'},,
+    {label:'5 phút',key:'5m',words:650,note:'~650 từ thuần thoại (không mô tả hành động/không gian). Solo ngắn, 1 insight.'},
     {label:'10 phút',key:'10m',words:1300,note:'~1,300 từ thuần thoại. Podcast mini, 2–3 điểm chính.'},
     {label:'15 phút',key:'15m',words:1950,note:'~1,950 từ thuần thoại. Podcast ngắn chuẩn. 1 câu chuyện hoàn chỉnh.'},
     {label:'20 phút',key:'20m',words:2600,note:'~2,600 từ thuần thoại. Đủ cho chiêm nghiệm sâu hoặc case study.'},
@@ -756,6 +756,10 @@ function goTab(n){
   const pane=$('pane-'+n);pane.classList.add('active');pane.style.display='flex';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.tab)===n));
   $('progress-fill').style.width=(n===0?0:Math.round(n/10*100))+'%';
+  // sync mobile bottom nav
+  document.querySelectorAll('.mobile-bottom-nav .tab-btn').forEach(b=>{
+    b.classList.toggle('active',parseInt(b.dataset.tab)===n);
+  });
 }
 function setLang(l){lang=l;$('lang-vi').classList.toggle('active',l==='vi');$('lang-en').classList.toggle('active',l==='en');}
 function setMode(mode){
@@ -798,7 +802,7 @@ function renderAll(){
   buildCS('cs-formula',d.formulas,'cs-formula-val',val=>{$('formula-hint').innerHTML='<div class="hint-title">'+val+'</div><div class="hint-body">'+(FORMULA_HINTS[val]||'')+'</div>';});
   buildCS('cs-style',d.styles,'cs-style-val',val=>{$('style-hint').innerHTML='<div class="hint-title">'+val+'</div><div class="hint-body">'+(STYLE_HINTS[val]||'')+'</div>';});
   const dl=DURATION[currentMode]||[];
-  buildCS('cs-duration',dl.map(x=>x.label),'cs-duration-val',val=>{
+  buildCS('cs-duration',dl.filter(x=>x).map(x=>x.label),'cs-duration-val',val=>{
     const mode=currentMode;const list=DURATION[mode]||[];const d2=list.find(x=>x.label===val);
     const hint=$('duration-hint');const te=$('dur-hint-title');const be=$('dur-hint-body');
     if(d2&&hint&&te&&be){hint.style.display='block';te.textContent=val+' — ~'+d2.words.toLocaleString()+' từ';be.innerHTML=d2.note+(mode==='podcast'?'<br><br><span style="color:var(--accent2);font-size:11px">⚠️ Chỉ tính từ được NÓI ra, không mô tả kỹ thuật.</span>':'');}
@@ -1106,15 +1110,6 @@ sb.auth.getSession().then(({data:{session}})=>{
   if(session?.user)showApp(session.user);
   else{$('auth-screen').style.display='flex';}
 });
-
-// sync bottom nav active state with goTab
-const _origGoTab = goTab;
-function goTab(n){
-  _origGoTab(n);
-  document.querySelectorAll('.mobile-bottom-nav .tab-btn').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.tab)===n);
-  });
-}
 
 // enter key on login
 document.addEventListener('keydown',e=>{
