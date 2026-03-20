@@ -42,7 +42,7 @@ body { background: var(--metallic-grad); background-attachment: fixed; color: va
 /* ── TOP BAR ── */
 .top-bar { grid-column: 1/-1; background: var(--topbar-grad); border-bottom: 1px solid var(--border2); padding: 0 24px; height: 48px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 0 var(--border2), 0 2px 8px rgba(184,134,11,0.08); }
 .top-bar-left { display: flex; align-items: center; gap: 12px; }
-.top-bar-logo { font-size: 36px; font-weight: 800; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 2px; }
+.top-bar-logo { font-size: 14px; font-weight: 800; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 2px; }
 .top-bar-right { display: flex; align-items: center; gap: 10px; }
 
 /* ── TAB RAIL ── */
