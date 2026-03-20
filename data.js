@@ -98,21 +98,20 @@ const DATA = {
 // ── CONVERSION GOALS ────────────────────────────────────────────────────────
 const CONVERSION = {
   business: [
-    'Tương tác (Like/Comment/Share)',
+    'Tương tác',
     'Tăng Follow / Sub kênh',
-    'Doanh số / Thêm giỏ hàng',
-    'Lead mềm (Inbox / Form)',
+    'Doanh số',
+    'Lead mềm (Inbox)',
     'Nhận diện thương hiệu',
-    'Tăng traffic website',
+    'Tăng view',
     'Upsell / Cross-sell',
   ],
   podcast: [
-    'Tăng lượt nghe / Stream',
-    'Tăng Follow / Subscribe',
+    'Tăng lượt nghe',
+    'Tăng Follow',
     'Xây dựng cộng đồng',
-    'Inbox tư vấn / Kết nối',
-    'Share & Giới thiệu người khác',
-    'Tải app / Tham gia group',
+    'Kết nối',
+    'Share',  
     'Soft-sell sản phẩm tự nhiên',
   ],
 };
