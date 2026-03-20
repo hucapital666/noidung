@@ -152,9 +152,68 @@
 
     <!-- PANE 6 — Đầu ra -->
     <div class="tab-pane" id="pane-6">
-      <div class="panel-header"><div class="panel-step-num">Bước 6/10</div><div class="panel-title">Định dạng đầu ra</div></div>
+      <div class="panel-header">
+        <div class="panel-step-num">Bước 6/10</div>
+        <div class="panel-title">Định dạng đầu ra</div>
+        <div class="panel-desc">Tuỳ chọn áp dụng cho Prompt ảnh & video AI</div>
+      </div>
       <div class="panel-body">
-        <div><div class="field-label">Chọn đầu ra (nhiều)</div><div class="multi-badges" id="badges-output"></div></div>
+
+        <!-- Loại đầu ra -->
+        <div>
+          <div class="field-label">Loại đầu ra (nhiều)</div>
+          <div class="multi-badges" id="badges-output"></div>
+        </div>
+
+        <!-- Khung hình -->
+        <div>
+          <div class="field-label">🖼 Khung hình</div>
+          <div class="multi-badges">
+            <span class="mbadge sel-g" id="ar-9-16" onclick="selectAR(this,'9:16')">9:16 <span style="opacity:.55;font-size:10px">Dọc</span></span>
+            <span class="mbadge"       id="ar-16-9" onclick="selectAR(this,'16:9')">16:9 <span style="opacity:.55;font-size:10px">Ngang</span></span>
+            <span class="mbadge"       id="ar-1-1"  onclick="selectAR(this,'1:1')">1:1 <span style="opacity:.55;font-size:10px">Vuông</span></span>
+            <span class="mbadge"       id="ar-4-5"  onclick="selectAR(this,'4:5')">4:5 <span style="opacity:.55;font-size:10px">Feed</span></span>
+          </div>
+        </div>
+
+        <!-- Chất lượng -->
+        <div>
+          <div class="field-label">✨ Chất lượng render</div>
+          <div class="multi-badges">
+            <span class="mbadge"       id="q-hd"  onclick="selectQ(this,'HD')">HD</span>
+            <span class="mbadge sel-g" id="q-4k"  onclick="selectQ(this,'4K')">4K</span>
+            <span class="mbadge"       id="q-8k"  onclick="selectQ(this,'8K')">8K</span>
+          </div>
+        </div>
+
+        <!-- Số lượng prompt -->
+        <div>
+          <div class="field-label" style="margin-bottom:10px">🔢 Số prompt ảnh / video xuất ra</div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <button onclick="changeQty(-1)" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--text);font-size:18px;cursor:pointer;font-family:Lexend,sans-serif;line-height:1;transition:all .15s;flex-shrink:0" onmouseover="this.style.borderColor='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)'">−</button>
+            <input id="qty-input" type="number" min="1" max="999" value="6"
+              oninput="promptQty=Math.max(1,parseInt(this.value)||1);document.getElementById('qty-display').textContent=promptQty"
+              style="width:64px;height:34px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--deep-gold);font-size:20px;font-weight:800;font-family:Lexend,sans-serif;text-align:center;outline:none;padding:0 4px;transition:border-color .18s"
+              onfocus="this.style.borderColor='var(--deep-gold)'" onblur="this.style.borderColor='var(--border2)'">
+            <span id="qty-display" style="display:none">6</span>
+            <button onclick="changeQty(+1)" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border2);background:var(--pure-white);color:var(--text);font-size:18px;cursor:pointer;font-family:Lexend,sans-serif;line-height:1;transition:all .15s;flex-shrink:0" onmouseover="this.style.borderColor='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)'">＋</button>
+            <span id="qty-unit" style="font-size:11px;color:var(--muted)">prompt</span>
+          </div>
+          <!-- Gợi ý nhanh theo thời lượng -->
+          <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px" id="qty-presets">
+            <span style="font-size:10px;color:var(--muted);width:100%;letter-spacing:.5px;text-transform:uppercase;font-weight:700;margin-bottom:2px">Gợi ý nhanh</span>
+            <button onclick="setQty(6)"  style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:Lexend,sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)';this.style.color='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">6 · Short</button>
+            <button onclick="setQty(10)" style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:Lexend,sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)';this.style.color='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">10 · 1 phút</button>
+            <button onclick="setQty(16)" style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:Lexend,sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)';this.style.color='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">16 · 3 phút</button>
+            <button onclick="setQty(24)" style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:Lexend,sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)';this.style.color='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">24 · 5 phút</button>
+            <button onclick="setQty(40)" style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:Lexend,sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)';this.style.color='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">40 · 10 phút</button>
+            <button onclick="setQty(60)" style="padding:4px 10px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:11px;font-family:Lexend,sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--deep-gold)';this.style.color='var(--deep-gold)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">60 · 15 phút</button>
+          </div>
+          <div style="margin-top:8px;font-size:11px;color:var(--muted);line-height:1.6">
+            Mỗi prompt = 1 cảnh bám sát kịch bản. Không giới hạn — nhập số tuỳ ý hoặc chọn gợi ý nhanh theo thời lượng video.
+          </div>
+        </div>
+
       </div>
       <div class="panel-nav"><button class="nav-btn" onclick="goTab(5)">← Lại</button><button class="nav-btn primary" onclick="goTab(7)">Tiếp →</button></div>
     </div>
