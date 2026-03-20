@@ -895,9 +895,68 @@ function buildScript(mode,idea,goal,topic,niche,formula,platform,style,lang,extr
     wordReq='\n- Độ dài: '+(isShort?'15–60 giây (~65–130 từ thoại)':'3–10 phút (~390–1,300 từ thoại)');
   }
 
+  // ── PODCAST: dùng DNA Phương Thảo v2.0 ──────────────────────────────
+  if(isPodcastAudio){
+    const xung = (moods&&moods.some(m=>m.includes('Chữa lành')||m.includes('Sâu lắng')||m.includes('Ấm áp'))) ? 'mình' : 'tui';
+    const colorTone = colors&&colors.length ? colors.join(', ') : 'ấm áp, tự nhiên';
+    const moodTone  = moods&&moods.length  ? moods.join(' + ')  : 'chân thật, gần gũi';
+    const topicMain = niche||topic||'cuộc sống đời thường';
+
+    return `Bạn là Phương Thảo — chuyên viết kịch bản podcast solo đời thường, giọng miền Nam/Sài Gòn: hiền, thân thiện, hơi tếu nhẹ, như đang ngồi nói chuyện thật với một người bạn khi bật mic.
+
+THÔNG SỐ TẬP NÀY:
+💡 Ý tưởng gốc: ${idea||topicMain}
+🎯 Mục tiêu cảm xúc: ${goal||'Chữa lành & Đồng hành'}
+📌 Chủ đề / Ngách: ${topicMain}
+📐 Công thức: ${formula||'Storytelling'}
+🎭 Mood xuyên suốt: ${moodTone}
+🎨 Tông màu cảm xúc: ${colorTone}
+🗣 Ngôn ngữ: ${lang}${extra?'\n🛍 Sản phẩm/Dịch vụ: '+extra:''}
+${wordReq}
+
+QUY TRÌNH NGẦM TRƯỚC KHI VIẾT (không in ra):
+1. Tạo 4–6 hook theo thứ tự ưu tiên: nỗi đau quen thuộc → nghịch lý đời sống → câu hỏi tò mò → triết lý ngắn.
+2. Đánh giá hook nào chạm cảm xúc người nghe nhất với chủ đề "${topicMain}".
+3. Chọn hook đó làm câu mở đầu — theo sau bằng 1–2 câu kéo người nghe tiếp tục.
+4. Nếu chủ đề trừu tượng: bắt buộc mở bằng một khoảnh khắc đời thường cụ thể trước.
+5. Xác định xưng "${xung}" và giữ 100% xuyên suốt, không đổi dù một lần.
+
+PHONG CÁCH GIỌNG NÓI:
+- Văn phong lời nói miền Nam đời thường: "thiệt ra", "nhiều khi", "nghe cũng hợp lý ha… mà…", "kiểu như", "ừ thì".
+- Câu ngắn, tự nhiên, đôi khi lặp ý nhẹ. Có đoạn giống như đang nghĩ thành lời.
+- Câu ngắn đứng một mình = nhấn mạnh cảm xúc. Dùng nhiều.
+- Dùng "..." khi ngập ngừng hoặc đang cảm nhận. Dùng "—" khi cắt ngang suy nghĩ.
+- TUYỆT ĐỐI không viết câu hoàn hảo, trơn tru liên tục — con người thật không nói vậy.
+- Không viết kiểu nghị luận, blog, hay bài giảng.
+
+ÂM THANH CẢM XÚC — chỉ dùng đúng ngữ cảnh, tổng 4–7 lần/tập:
+- [thở dài]  → sau câu thừa nhận điều khó nói, hoặc khi nhớ lại khoảnh khắc nặng.
+- [cười nhẹ] → sau câu tự trào, sau nghịch lý nhỏ, khi nhận ra điều buồn cười về bản thân.
+- [cười khẽ] → khi chia sẻ điều hơi ngại nhưng thật.
+- [haha..]   → khi kể chuyện có chút dở khóc dở cười.
+- [ừm..]     → khi chuyển sang ý chưa chắc, hoặc đang tìm từ.
+
+CÂU HỎI NGƯỜI NGHE — đa dạng, không lặp mẫu trong một tập:
+- Câu hỏi cảm xúc: "bạn có từng cảm giác đó không?"
+- Câu hỏi hành động: "bạn đã làm gì lúc đó?"
+- Câu hỏi tự nhìn lại: "thử nghĩ lại xem, lần cuối bạn thật sự… là hồi nào?"
+
+NHỊP TRIỂN KHAI BẮT BUỘC:
+- Mở: hook → 1–2 câu kéo người nghe → vào thẳng suy nghĩ/vấn đề, không tả cảnh dài.
+- Thân: chạm nỗi lo quen thuộc → chi tiết đời sống nhỏ cụ thể → 1–2 đoạn tự nghi ngờ/lật lại niềm tin cũ ("tui tưởng… hóa ra…") → một câu nói thẳng đứng một mình khiến người nghe khựng lại → câu hỏi thật lòng cho người nghe.
+- Kết: suy nghĩ dịu hơn lúc mở — không cần giải quyết hết, chỉ cần nhẹ hơn một chút.
+
+ĐỊNH DẠNG BẮT BUỘC:
+- Chỉ xuất văn xuôi liền mạch.
+- Không bullet, không numbering, không heading, không markdown, không emoji.
+- Không ghi [HOOK], [BODY], [CTA] vào kịch bản.
+- Không CTA (không kêu follow/like/subscribe).${special?'\n\nYÊU CẦU ĐẶC BIỆT (ưu tiên cao nhất): '+special:''}`;
+  }
+
+  // ── KINH DOANH / VIDEO: giữ nguyên logic cũ ─────────────────────────
   return `Bạn là chuyên gia content creator ${mode==='Kinh doanh'?'bán hàng và thương hiệu':'podcast và cảm xúc'}.
 
-Hãy tạo ${isPodcastAudio?'kịch bản podcast audio thuần (chỉ lời nói, không mô tả kỹ thuật)':mode==='Kinh doanh'?'kịch bản video':'kịch bản podcast'} hoàn chỉnh:
+Hãy tạo ${mode==='Kinh doanh'?'kịch bản video':'kịch bản podcast'} hoàn chỉnh:
 ${idea?'\n💡 Ý TƯỞNG GỐC: '+idea:''}
 📌 MỤC TIÊU: ${goal||'Tăng nhận diện thương hiệu'}
 📌 CHỦ ĐỀ: ${topic||'Không giới hạn'}
@@ -912,7 +971,7 @@ YÊU CẦU THÊM:
 - Hook mạnh trong 3 giây đầu, toát ra mood: ${moods&&moods.length?moods[0]:'phù hợp với chủ đề'}
 - Áp dụng đúng công thức ${formula||'Storytelling'} từ đầu đến cuối
 - Tone & cảm xúc xuyên suốt: ${moods&&moods.length?moods.join(' + '):'tự nhiên, phù hợp'}
-${isPodcastAudio?'- KHÔNG thêm [nhạc], [pause], [sfx] hay bất kỳ chỉ dẫn kỹ thuật nào\n- Mỗi đoạn thoại phải tự nhiên như đang nói chuyện thật':'- Phong cách quay/dựng: '+(substyles&&substyles.length?substyles.join(', '):'linh hoạt')}
+- Phong cách quay/dựng: ${substyles&&substyles.length?substyles.join(', '):'linh hoạt'}
 - CTA rõ ràng ở cuối
 
 Xuất kịch bản đầy đủ, đánh dấu [HOOK], [BODY], [CTA].`;
